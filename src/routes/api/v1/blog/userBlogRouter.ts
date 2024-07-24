@@ -1,9 +1,10 @@
-import { Router , Request , Response } from "express";
+import { Router } from "express";
+import { BlogController } from "../../../../controllers/api/v1/blog/userBlogController";
+
 const router = Router();
 
-router.get('/', (req : Request , res : Response)=>{
-    res.json('Welcome to Api v1 - user blog')
-});
+router.get('/', BlogController.getBlog);
+// router.post('/', BlogController.insertBlog);
 
 
 export default router;
