@@ -10,7 +10,7 @@ export class AdminBlogController {
         res.json(blogs)
     }
 
-    static async getCategory (req : Request , res : Response ) {
+    static async allCategory (req : Request , res : Response ) {
         const categories = await prisma.blogCategory.findMany()
         res.json(categories)
     }
@@ -22,14 +22,13 @@ export class AdminBlogController {
             data: { title },
         }).then((result)=>{
             return res.status(201).json(result);
+        }).catch((error)=>{
+            if (error.code == "P2002"){
+                return res.status(409).json("This Category is Already Exist!")
+            }else{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
         })
-        // .catch((error)=>{
-        //     if (error.code == "P2002"){
-        //         return res.status(409).json("This Category is Already Exist!")
-        //     }else{
-        //         return res.status(520).json("Unknown Error, Please Try Again Later.")
-        //     }
-        // })
 
 
     }
@@ -42,9 +41,13 @@ export class AdminBlogController {
             where: { id : Number(id) },
             data: { title: title }
         }).then((result)=>{
-            res.status(201).json(result);
+            return res.status(201).json(result);
         }).catch((error)=>{
-            return res.status(520).json("Unknown Error, Please Try Again Later.")
+            if (error.code == "P2025"){
+                return res.status(409).json("This Id is Not Exist!")
+            }else{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
         })
     }
 
@@ -54,9 +57,13 @@ export class AdminBlogController {
         const result = await prisma.blogCategory.delete({
             where: { id : Number(id) },
         }).then((result)=>{
-            res.status(204).json(result + "Category is Deleted Successfully.");
+            return res.status(200).json("Category is Deleted Successfully.");
         }).catch((error)=>{
-            return res.status(520).json("Unknown Error, Please Try Again Later.")
+            if (error.code == "P2025"){
+                return res.status(409).json("This Id is Not Exist!")
+            }else{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
         })
     }
 

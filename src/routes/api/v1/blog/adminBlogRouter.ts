@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { validateBody } from 'express-joi-validations';
-
 import { AdminBlogController } from "../../../../controllers/api/v1/blog/adminBlogController";
 import { schema } from "../../../../utils/validationBlogCategory";
+import { validateRequestSchema } from "../../../../utils/validation";
+
 const router = Router();
 
 router.get('/', AdminBlogController.getBlog);
 
-router.get('/category', validateBody(schema) , AdminBlogController.getCategory);
-router.post('/category', AdminBlogController.createCategory);
-router.put('/category/:id', AdminBlogController.updateCategory);
+router.get('/category', AdminBlogController.allCategory);
+router.post('/category', schema , validateRequestSchema ,AdminBlogController.createCategory);
+router.put('/category/:id', schema , validateRequestSchema , AdminBlogController.updateCategory);
 router.delete('/category/:id', AdminBlogController.deleteCategory);
 
 
