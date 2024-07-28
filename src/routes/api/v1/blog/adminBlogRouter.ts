@@ -5,7 +5,7 @@ import { validateRequestSchema } from "../../../../utils/validation";
 
 const router = Router();
 
-router.get('/', AdminBlogController.getBlog);
+router.get('/', AdminBlogController.allBlog);
 
 router.get('/category', AdminBlogController.allCategory);
 router.post('/category', schema , validateRequestSchema ,AdminBlogController.createCategory);

@@ -5,10 +5,28 @@ const prisma = new PrismaClient()
 
 export class AdminBlogController {
 
-    static async getBlog (req : Request , res : Response ) {
+    static async allBlog (req : Request , res : Response ) {
         const blogs = await prisma.blog.findMany()
         res.json(blogs)
     }
+    // static async insertBlog (req : Request , res : Response ) {
+    //     const createdAt = new Date();
+    //     const updatedAt = new Date();
+
+    //     const { title, content, imageurl, authorId, categoryId } = req.body
+    //     const result = await prisma.blog.create({
+    //         data: {
+    //         title,
+    //         content,
+    //         imageurl,
+    //         createdAt,
+    //         updatedAt,
+    //         authorId,
+    //         categoryId
+    //     },
+    // })
+    // res.json(result)
+    // }
 
     static async allCategory (req : Request , res : Response ) {
         const categories = await prisma.blogCategory.findMany()
