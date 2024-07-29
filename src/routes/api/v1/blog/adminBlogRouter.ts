@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { AdminBlogController } from "@controllers/api/v1/blog/adminBlogController";
-import { categorySchema } from "@utils/validationSchema";
+import { categorySchema , blogSchema } from "@utils/validationSchema";
 import { validateRequestSchema } from "@utils/validation";
 
 const router = Router();
 
 router.get('/', AdminBlogController.allBlog);
-router.post('/', AdminBlogController.createBlog);
+router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
 
 
 router.get('/category', AdminBlogController.allCategory);
