@@ -1,10 +1,14 @@
-// import { Response } from "express";
-// import validUrl from "valid-url";
+// import { ExpressValidator } from 'express-validator';
 
-// export function urlValidation (value: any , res:Response){
-//     if (validUrl.isUri(value)){
-//         return value;
-//     }else{
-//         return res.json("invalid url")
-//     }
-// }
+// const { body, validationResult } = new ExpressValidator(
+//   {
+//     isImageUrl: async value => {
+//       // Verify if the value matches the post ID format
+//     },
+//   },
+//   {
+//     muteOffensiveWords: value => {
+//       // Replace offensive words with ***
+//     },
+//   },
+// );

@@ -7,6 +7,7 @@ const router = Router();
 
 router.get('/', AdminBlogController.allBlog);
 router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
+router.delete('/:id', AdminBlogController.deleteBlog);
 
 
 router.get('/category', AdminBlogController.allCategory);

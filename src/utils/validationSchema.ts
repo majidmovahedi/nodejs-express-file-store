@@ -17,7 +17,7 @@ export const blogSchema  = [
         if (validUrl.isUri(value)){
             return value === req.body.imageurl;
         }
-      }).withMessage('Invalid Url'),
+    }).withMessage('Invalid Url'),
 
     // body('title').custom((value, { req }) => {
     //     if (typeof value === 'string'){

@@ -37,6 +37,22 @@ export class AdminBlogController {
     })
     }
 
+    static async deleteBlog (req : Request , res : Response ) {
+        const { id } = req.params;
+
+        const result = await prisma.blog.delete({
+            where: { id : Number(id) },
+        }).then((result)=>{
+            return res.status(200).json("Blog is Deleted Successfully.");
+        }).catch((error)=>{
+            if (error.code == "P2025"){
+                return res.status(409).json("This Id is Not Exist!")
+            }else{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
+        })
+    }
+
     static async allCategory (req : Request , res : Response ) {
         const categories = await prisma.blogCategory.findMany()
         res.json(categories)
