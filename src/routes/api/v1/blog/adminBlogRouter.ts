@@ -7,8 +7,8 @@ const router = Router();
 
 router.get('/', AdminBlogController.allBlog);
 router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
+router.put('/:id', blogSchema , validateRequestSchema ,AdminBlogController.updateBlog);
 router.delete('/:id', AdminBlogController.deleteBlog);
-
 
 router.get('/category', AdminBlogController.allCategory);
 router.post('/category', categorySchema , validateRequestSchema ,AdminBlogController.createCategory);

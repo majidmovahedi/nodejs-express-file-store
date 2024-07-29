@@ -6,16 +6,16 @@ const prisma = new PrismaClient()
 export class AdminBlogController {
 
     static async allBlog (req : Request , res : Response ) {
-        const blogs = await prisma.blog.findMany()
-        res.json(blogs)
+        const blogs = await prisma.blog.findMany();
+        res.json(blogs);
     }
 
     static async createBlog (req : Request , res : Response ) {
         const createdAt = new Date();
         const updatedAt = new Date();
         const authorId = 1;
-        const categoryId = parseInt(req.body.categoryId)
-        const { title, content, imageurl } = req.body
+        const categoryId = parseInt(req.body.categoryId);
+        const { title, content, imageurl } = req.body;
         const result = await prisma.blog.create({
             data: {
             title,
@@ -37,6 +37,34 @@ export class AdminBlogController {
     })
     }
 
+    static async updateBlog (req : Request , res : Response ) {
+        const { id } = req.params;
+        const updatedAt = new Date();
+        const authorId = 1;
+        const categoryId = parseInt(req.body.categoryId);
+        const { title, content, imageurl } = req.body;
+
+        const result = await prisma.blog.update({
+            where: { id : Number(id) },
+            data: {
+            title,
+            content,
+            imageurl,
+            categoryId,
+            updatedAt,
+            authorId
+        },
+        }).then((result)=>{
+            return res.status(201).json(result);
+        }).catch((error)=>{
+            if (error.code == "P2025"){
+                return res.status(409).json("This Id is Not Exist!")
+            }else{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
+        })
+    }
+
     static async deleteBlog (req : Request , res : Response ) {
         const { id } = req.params;
 
@@ -54,13 +82,13 @@ export class AdminBlogController {
     }
 
     static async allCategory (req : Request , res : Response ) {
-        const categories = await prisma.blogCategory.findMany()
-        res.json(categories)
+        const categories = await prisma.blogCategory.findMany();
+        res.json(categories);
     }
 
     static async createCategory (req : Request , res : Response ) {
 
-        const { title } = req.body
+        const { title } = req.body;
         const result = await prisma.blogCategory.create({
             data: { title },
         }).then((result)=>{
@@ -72,8 +100,6 @@ export class AdminBlogController {
                 return res.status(520).json("Unknown Error, Please Try Again Later.")
             }
         })
-
-
     }
 
     static async updateCategory (req : Request , res : Response ) {
@@ -82,7 +108,7 @@ export class AdminBlogController {
 
         const result = await prisma.blogCategory.update({
             where: { id : Number(id) },
-            data: { title: title }
+            data: { title },
         }).then((result)=>{
             return res.status(201).json(result);
         }).catch((error)=>{
