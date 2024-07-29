@@ -3,8 +3,10 @@ import { UserBlogController } from "@controllers/api/v1/blog/userBlogController"
 
 const router = Router();
 
+// User Blog Router
 router.get('/', UserBlogController.allBlog);
-router.get('/category', UserBlogController.allCategory);
 
+// User Category Router
+router.get('/category', UserBlogController.allCategory);
 
 export default router;

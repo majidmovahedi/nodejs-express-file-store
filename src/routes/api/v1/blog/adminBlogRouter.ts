@@ -5,11 +5,13 @@ import { validateRequestSchema } from "@utils/validation";
 
 const router = Router();
 
+// Admin Blog Router
 router.get('/', AdminBlogController.allBlog);
 router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
 router.put('/:id', blogSchema , validateRequestSchema ,AdminBlogController.updateBlog);
 router.delete('/:id', AdminBlogController.deleteBlog);
 
+// Admin Category Router
 router.get('/category', AdminBlogController.allCategory);
 router.post('/category', categorySchema , validateRequestSchema ,AdminBlogController.createCategory);
 router.put('/category/:id', categorySchema , validateRequestSchema , AdminBlogController.updateCategory);

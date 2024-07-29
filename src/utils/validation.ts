@@ -8,4 +8,3 @@ export function validateRequestSchema(req: Request, res: Response, next: NextFun
   }
   next();
 }
-
