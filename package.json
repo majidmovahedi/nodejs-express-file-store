@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.ts",
+  "_moduleAliases": {
+    "@controllers": "./src/controllers",
+    "@middleware": "./src/middleware",
+    "@routes": "./src/routes",
+    "@utils": "./src/utils"
+  },
   "scripts": {
     "start": "nodemon server.ts"
   },
@@ -12,8 +18,8 @@
     "@prisma/client": "^5.17.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "express-joi-validations": "^0.1.0",
     "express-validator": "^7.1.0",
+    "module-alias": "^2.2.3",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
