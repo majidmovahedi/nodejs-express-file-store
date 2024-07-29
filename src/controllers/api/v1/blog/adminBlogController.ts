@@ -9,24 +9,33 @@ export class AdminBlogController {
         const blogs = await prisma.blog.findMany()
         res.json(blogs)
     }
-    // static async insertBlog (req : Request , res : Response ) {
-    //     const createdAt = new Date();
-    //     const updatedAt = new Date();
 
-    //     const { title, content, imageurl, authorId, categoryId } = req.body
-    //     const result = await prisma.blog.create({
-    //         data: {
-    //         title,
-    //         content,
-    //         imageurl,
-    //         createdAt,
-    //         updatedAt,
-    //         authorId,
-    //         categoryId
-    //     },
-    // })
-    // res.json(result)
-    // }
+    static async createBlog (req : Request , res : Response ) {
+        const createdAt = new Date();
+        const updatedAt = new Date();
+        const authorId = 1;
+        const categoryId = parseInt(req.body.categoryId)
+        const { title, content, imageurl } = req.body
+        const result = await prisma.blog.create({
+            data: {
+            title,
+            content,
+            imageurl,
+            createdAt,
+            updatedAt,
+            authorId,
+            categoryId
+        },
+    }).then((result)=>{
+        return res.status(201).json(result);
+    }).catch((error)=>{
+        if (error.code == "P2003"){
+            return res.status(520).json("This Category is Not Exist!")
+        }else{
+            return res.status(520).json("Unknown Error, Please Try Again Later.")
+        }
+    })
+    }
 
     static async allCategory (req : Request , res : Response ) {
         const categories = await prisma.blogCategory.findMany()
