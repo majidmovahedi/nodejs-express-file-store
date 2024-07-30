@@ -16,9 +16,14 @@ export class UserBlogController {
         const blog = await prisma.blog.findUnique({
             where: { id : Number(id) }
         }).then((blog)=>{
-            return res.json(blog);
+            if(blog === null){
+                return res.status(520).json("This Blog is Not Exist!")
+            }else{
+                return res.json(blog);
+            }
+        }).catch((error)=>{
+            return res.status(520).json("Invalid parameter")
         })
-
     }
 
     // User Category Read
