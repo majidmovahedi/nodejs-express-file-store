@@ -7,6 +7,7 @@ const router = Router();
 
 // Admin Blog Router
 router.get('/', AdminBlogController.allBlog);
+router.get('/:id', AdminBlogController.singleBlog);
 router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
 router.put('/:id', blogSchema , validateRequestSchema ,AdminBlogController.updateBlog);
 router.delete('/:id', AdminBlogController.deleteBlog);

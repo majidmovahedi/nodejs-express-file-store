@@ -8,7 +8,6 @@ export const categorySchema  = [
 export const blogSchema  = [
     body('title').notEmpty().withMessage('Title Cant be Null!'),
     body('title').isLength({min: 5}).withMessage('Title Cant be less Than 5 Characters!'),
-    // body('title').isString().withMessage('Title Must be String!'),
 
     body('content').notEmpty().withMessage('Content Cant be Null!'),
     body('content').isLength({min: 20}).withMessage('Content Cant be less Than 20 Characters!'),

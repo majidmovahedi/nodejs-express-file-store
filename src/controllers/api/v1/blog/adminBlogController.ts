@@ -12,6 +12,16 @@ export class AdminBlogController {
         res.json(blogs);
     }
 
+    static async singleBlog (req : Request , res : Response ) {
+        const { id } = req.params;
+        const blog = await prisma.blog.findUnique({
+            where: { id : Number(id) }
+        }).then((blog)=>{
+            return res.json(blog);
+        })
+
+    }
+
     static async createBlog (req : Request , res : Response ) {
         const createdAt = new Date();
         const updatedAt = new Date();
@@ -46,7 +56,7 @@ export class AdminBlogController {
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
 
-        const result = await prisma.blog.update({
+        const blog = await prisma.blog.update({
             where: { id : Number(id) },
             data: {
             title,
@@ -56,8 +66,8 @@ export class AdminBlogController {
             updatedAt,
             authorId
         },
-        }).then((result)=>{
-            return res.status(201).json(result);
+        }).then((blog)=>{
+            return res.status(201).json(blog);
         }).catch((error)=>{
             if (error.code == "P2025"){
                 return res.status(409).json("This Id is Not Exist!")
@@ -70,9 +80,9 @@ export class AdminBlogController {
     static async deleteBlog (req : Request , res : Response ) {
         const { id } = req.params;
 
-        const result = await prisma.blog.delete({
+        const blog = await prisma.blog.delete({
             where: { id : Number(id) },
-        }).then((result)=>{
+        }).then((blog)=>{
             return res.status(200).json("Blog is Deleted Successfully.");
         }).catch((error)=>{
             if (error.code == "P2025"){
@@ -83,7 +93,7 @@ export class AdminBlogController {
         })
     }
 
-    
+
     // Admin Category CRUD
 
     static async allCategory (req : Request , res : Response ) {
@@ -94,10 +104,10 @@ export class AdminBlogController {
     static async createCategory (req : Request , res : Response ) {
 
         const { title } = req.body;
-        const result = await prisma.blogCategory.create({
+        const category = await prisma.blogCategory.create({
             data: { title },
-        }).then((result)=>{
-            return res.status(201).json(result);
+        }).then((category)=>{
+            return res.status(201).json(category);
         }).catch((error)=>{
             if (error.code == "P2002"){
                 return res.status(409).json("This Category is Already Exist!")
@@ -111,11 +121,11 @@ export class AdminBlogController {
         const { id } = req.params;
         const { title } = req.body;
 
-        const result = await prisma.blogCategory.update({
+        const category = await prisma.blogCategory.update({
             where: { id : Number(id) },
             data: { title },
-        }).then((result)=>{
-            return res.status(201).json(result);
+        }).then((category)=>{
+            return res.status(201).json(category);
         }).catch((error)=>{
             if (error.code == "P2025"){
                 return res.status(409).json("This Id is Not Exist!")
@@ -128,9 +138,9 @@ export class AdminBlogController {
     static async deleteCategory (req : Request , res : Response ) {
         const { id } = req.params;
 
-        const result = await prisma.blogCategory.delete({
+        const category = await prisma.blogCategory.delete({
             where: { id : Number(id) },
-        }).then((result)=>{
+        }).then((category)=>{
             return res.status(200).json("Category is Deleted Successfully.");
         }).catch((error)=>{
             if (error.code == "P2025"){
