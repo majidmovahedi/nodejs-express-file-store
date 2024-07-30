@@ -5,6 +5,7 @@ const router = Router();
 
 // User Blog Router
 router.get('/', UserBlogController.allBlog);
+router.get('/:id', UserBlogController.singleBlog);
 
 // User Category Router
 router.get('/category', UserBlogController.allCategory);
