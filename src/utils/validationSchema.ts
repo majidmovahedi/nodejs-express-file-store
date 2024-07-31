@@ -32,4 +32,7 @@ export const blogSchema  = [
     //   }),
 ]
 
-
+export const userSchema  = [
+    body('email').notEmpty().withMessage('Email Cant be Null!'),
+    body('email').isEmail().withMessage('Please Enter Valid Email!'),
+]
