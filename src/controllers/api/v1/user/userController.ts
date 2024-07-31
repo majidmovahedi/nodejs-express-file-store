@@ -1,6 +1,7 @@
 import { Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
+import { sendEmail } from "@utils/sendEmails";
 
 const prisma = new PrismaClient()
 
@@ -49,6 +50,35 @@ export class UserController {
             return res.status(520).json("Unknown Error, Please Try Again Later.")
         }
     })
+    }
+
+    static async senEmail (req : Request , res : Response ) {
+        // const { email } = req.body;
+        // const result = await prisma.user.create({})
+
+        try {
+            const { email, message } = req.body;
+
+            if (!email) {
+                return res.status(400).json({ message: "Email is required." });
+            }
+
+            const options = {
+                to: email,
+                subject: "Test",
+                message: message,
+            };
+
+            await sendEmail(options);
+
+            res.status(200).json({
+                message: "Check your mail!",
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Internal server error" });
+        }
+
     }
 
 }
