@@ -1,5 +1,6 @@
 import { Request , Response } from "express";
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient()
 
@@ -26,6 +27,28 @@ export class UserController {
             return res.status(520).json("Invalid parameter")
         })
 
+    }
+
+    static async register (req : Request , res : Response ) {
+        const type = Boolean(req.body.type);
+        const password = await bcrypt.hash(req.body.password, 10);
+        const { fullname, email } = req.body;
+        const result = await prisma.user.create({
+            data: {
+                fullname,
+                email,
+                password,
+                type
+        },
+    }).then((result)=>{
+        return res.status(201).json(result);
+    }).catch((error)=>{
+        if (error.code == "P2002"){
+            return res.status(409).json("This User is Already Exist!")
+        }else{
+            return res.status(520).json("Unknown Error, Please Try Again Later.")
+        }
+    })
     }
 
 }
