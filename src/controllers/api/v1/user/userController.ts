@@ -56,11 +56,12 @@ export class UserController {
         const { email } = req.body;
         const generateCode = getRandomInt();
 
-
+        // Find User
         const user = await prisma.user.findUnique({
             where: { email : email }
         }).then(async(user)=>{
 
+            // Add OTP Code to otp Table
             const userId = Number(user?.id);
             const code = generateCode;
             const result =await prisma.otp.create({
@@ -70,11 +71,11 @@ export class UserController {
                 },
             }).then((result)=>{
                 res.status(200).json(result);
-
             }).catch((error)=>{
                 return res.status(520).json("Unknown Error, Please Try Again Later.")
             })
 
+            // Send Code to User Email
             await transporter.sendMail({
                 from: process.env.EMAIL,
                 to: email,
@@ -82,10 +83,7 @@ export class UserController {
                 html: `<h1>Your Activation Code is : ${generateCode}</h1>`
             }).then(() => {
                 res.json('OK, Email has been sent.');
-
-            })
-              .catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
-
+            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
 
         }).catch((user)=>{
             if(user === null){
