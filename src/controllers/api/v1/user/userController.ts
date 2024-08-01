@@ -56,14 +56,42 @@ export class UserController {
         const { email } = req.body;
         const generateCode = getRandomInt();
 
-        await transporter.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Activation Code',
-            html: `<h1>Your Activation Code is : ${generateCode}</h1>`
-        }).then(() => res.json('OK, Email has been sent.'))
-          .catch(console.error);
 
+        const user = await prisma.user.findUnique({
+            where: { email : email }
+        }).then(async(user)=>{
+
+            const userId = Number(user?.id);
+            const code = generateCode;
+            const result =await prisma.otp.create({
+                data:{
+                    userId,
+                    code,
+                },
+            }).then((result)=>{
+                res.status(200).json(result);
+
+            }).catch((error)=>{
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            })
+
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Activation Code',
+                html: `<h1>Your Activation Code is : ${generateCode}</h1>`
+            }).then(() => {
+                res.json('OK, Email has been sent.');
+
+            })
+              .catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+
+
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
 
     };
 }

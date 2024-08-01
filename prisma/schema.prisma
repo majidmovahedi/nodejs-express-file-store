@@ -18,7 +18,17 @@ model User {
   email     String   @unique
   password  String
   blog      Blog[]
+  otp       Otp[]
   type	    Boolean  @default(false)
+}
+
+model Otp {
+  id        Int      @id @default(autoincrement())
+  code      Int
+  expire_time   DateTime    @default(now())
+  userId    Int
+
+  otp      User     @relation(fields: [userId], references: [id])
 }
 
 model BlogCategory {
