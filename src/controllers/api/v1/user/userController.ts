@@ -1,7 +1,7 @@
 import { Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
-import { sendEmail } from "@utils/sendEmails";
+import nodemailer from "nodemailer";
 
 const prisma = new PrismaClient()
 
@@ -53,32 +53,33 @@ export class UserController {
     }
 
     static async senEmail (req : Request , res : Response ) {
-        // const { email } = req.body;
-        // const result = await prisma.user.create({})
+        const { email, message } = req.body;
 
-        try {
-            const { email, message } = req.body;
+        const MAIL_HOST = "smtp.liara.ir";
+        const MAIL_PORT = 587;
+        const MAIL_USER = process.env.MAIL_USER;
+        const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 
-            if (!email) {
-                return res.status(400).json({ message: "Email is required." });
+
+        const transporter = nodemailer.createTransport({
+            host: MAIL_HOST,
+            port: MAIL_PORT,
+            secure: false,
+            auth: {
+              user: MAIL_USER,
+              pass: MAIL_PASSWORD,
             }
+          });
 
-            const options = {
-                to: email,
-                subject: "Test",
-                message: message,
-            };
+          transporter.sendMail({
+            from: 'MyName <support@mail.tadvir.ir>',
+            to: email,
+            subject: 'Test Email Subject',
+            html: `<h1>${message}</h1>`
+          })
+            .then(() => res.json('OK, Email has been sent.'))
+            .catch(console.error);
 
-            await sendEmail(options);
 
-            res.status(200).json({
-                message: "Check your mail!",
-            });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: "Internal server error" });
-        }
-
-    }
-
+    };
 }
