@@ -9,6 +9,6 @@ const router = Router();
 router.get('/', UserController.allUser);
 router.get('/:id', UserController.singleUser);
 router.post('/register', userSchema , validateRequestSchema , UserController.register);
-router.post('/resend', userSchema , validateRequestSchema , UserController.senEmail);
+router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
 
 export default router;

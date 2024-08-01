@@ -1,8 +1,8 @@
 import { Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
-
+import { transporter } from "@utils/sendEmails";
+import { getRandomInt } from "@utils/codeGenerator";
 const prisma = new PrismaClient()
 
 export class UserController {
@@ -52,33 +52,17 @@ export class UserController {
     })
     }
 
-    static async senEmail (req : Request , res : Response ) {
-        const { email, message } = req.body;
+    static async resend (req : Request , res : Response ) {
+        const { email } = req.body;
+        const generateCode = getRandomInt();
 
-        const MAIL_HOST = "smtp.liara.ir";
-        const MAIL_PORT = 587;
-        const MAIL_USER = process.env.MAIL_USER;
-        const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
-
-
-        const transporter = nodemailer.createTransport({
-            host: MAIL_HOST,
-            port: MAIL_PORT,
-            secure: false,
-            auth: {
-              user: MAIL_USER,
-              pass: MAIL_PASSWORD,
-            }
-          });
-
-          transporter.sendMail({
-            from: 'MyName <support@mail.tadvir.ir>',
+        await transporter.sendMail({
+            from: process.env.EMAIL,
             to: email,
-            subject: 'Test Email Subject',
-            html: `<h1>${message}</h1>`
-          })
-            .then(() => res.json('OK, Email has been sent.'))
-            .catch(console.error);
+            subject: 'Activation Code',
+            html: `<h1>Your Activation Code is : ${generateCode}</h1>`
+        }).then(() => res.json('OK, Email has been sent.'))
+          .catch(console.error);
 
 
     };
