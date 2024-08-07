@@ -1,8 +1,0 @@
--- DropForeignKey
-ALTER TABLE "Otp" DROP CONSTRAINT "Otp_userId_fkey";
-
--- AlterTable
-ALTER TABLE "Otp" ALTER COLUMN "userId" SET DATA TYPE TEXT;
-
--- AddForeignKey
-ALTER TABLE "Otp" ADD CONSTRAINT "Otp_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("email") ON DELETE RESTRICT ON UPDATE CASCADE;

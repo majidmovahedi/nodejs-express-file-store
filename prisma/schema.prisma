@@ -20,6 +20,7 @@ model User {
   blog      Blog[]
   otp       Otp[]
   type	    Boolean  @default(false)
+  is_active	    Boolean  @default(false)
 }
 
 model Otp {
