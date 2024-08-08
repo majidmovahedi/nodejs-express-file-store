@@ -68,7 +68,6 @@ export class UserController {
         // })
         // .catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
 
-
         }).catch((error)=>{
             if (error.code == "P2002"){
                 return res.status(409).json("This User is Already Exist!")
@@ -83,7 +82,7 @@ export class UserController {
 
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email }
+            where: { email : email , is_active: false }
         }).then(async(user)=>{
 
             // Add OTP Code to otp Table
@@ -122,35 +121,34 @@ export class UserController {
         const { email, code } = req.body;
 
         const user = await prisma.user.findUnique({
-            where: { email : email }
+            where: { email : email , is_active: false }
         })
         .then(async(user)=>{
-            const otpCode = await prisma.otp.findMany({
-                where: { userId : user?.id }
-            })
-            .then((otpCode)=>{
-                otpCode.map(async(item)=>{
+            const latestOtp = await prisma.otp.findFirst({
+                where: { userId : user?.id },
+                orderBy: {
+                    id: 'desc',
+                },
+                take: 1,
+        })
+        .then(async (latestOtp)=>{
+            if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
 
-                    if( item.code == code && (item.expire_time.getTime() + 30 * 60000) > Date.now()){
-
-                        await prisma.user.update({
-                            where: { email: email },
-                            data: { is_active: true },
-                        })
-                        .then(async ()=>{
-                            await prisma.otp.deleteMany({
-                                where: { userId: user?.id }
-                            })
-                            return res.json("user activate")
-
-                        })
-
-                    }else{
-                        return res.status(520).json("This Code is Invalid or expired!")
-                    }
+                await prisma.user.update({
+                    where: { email: email },
+                    data: { is_active: true },
+                })
+                .then(async ()=>{
+                    await prisma.otp.deleteMany({
+                        where: { userId: user?.id }
+                    })
+                    return res.json("user activate")
                 })
 
-            })
+            }else{
+                return res.status(520).json("This Code is Invalid or expired!")
+            }
+        })
 
         }).catch((user)=>{
             if(user === null){
