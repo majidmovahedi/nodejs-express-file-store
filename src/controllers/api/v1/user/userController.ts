@@ -117,4 +117,48 @@ export class UserController {
         })
 
     };
+
+    static async verify (req : Request , res : Response ) {
+        const { email, code } = req.body;
+
+        const user = await prisma.user.findUnique({
+            where: { email : email }
+        }).then(async(user)=>{
+            const otpCode = await prisma.otp.findMany({
+                where: { userId : user?.id }
+            })
+            .then((otpCode)=>{
+                otpCode.map((item)=>{
+                    if( item.code == code && (item.expire_time.getTime() + 30 * 60000) > Date.now()){
+
+                        const updateUser = prisma.user.update({
+                            where: {
+                              email: email,
+                            },
+                            data: {
+                              is_active: true,
+                            },
+                          }).then((updateUser)=>{
+                            res.json("user activate")
+                            
+                          })
+
+                    }else{
+                        res.json("This Code is Invalid! or expired")
+                    }
+                })
+
+
+            })
+            .catch((otpCode)=>{
+                // return res.status(520).json("This Code is Invalid!")
+            })
+
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
+
+    };
 }

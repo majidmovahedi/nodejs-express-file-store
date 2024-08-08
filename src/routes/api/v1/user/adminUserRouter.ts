@@ -10,5 +10,6 @@ router.get('/', UserController.allUser);
 router.get('/:id', UserController.singleUser);
 router.post('/register', userSchema , validateRequestSchema , UserController.register);
 router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
+router.post('/verify', userSchema , validateRequestSchema , UserController.verify);
 
 export default router;
