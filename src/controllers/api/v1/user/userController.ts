@@ -1,8 +1,8 @@
 import { Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
-import { transporter } from "@utils/sendEmails";
-import { getRandomInt } from "@utils/codeGenerator";
+import { transporter } from "@utils/auth/sendEmails";
+import { getRandomInt } from "@utils/auth/codeGenerator";
 const prisma = new PrismaClient()
 
 export class UserController {

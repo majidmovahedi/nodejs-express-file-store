@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { UserController } from "@controllers/api/v1/user/userController";
-import { userSchema , userVerifySchema } from "@utils/validationSchema";
-import { validateRequestSchema } from "@utils/validation";
+import { userSchema , userVerifySchema } from "@utils/validation/validationSchema";
+import { validateRequestSchema } from "@utils/validation/validation";
 
 const router = Router();
 

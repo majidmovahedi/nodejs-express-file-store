@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AdminBlogController } from "@controllers/api/v1/blog/adminBlogController";
-import { categorySchema , blogSchema } from "@utils/validationSchema";
-import { validateRequestSchema } from "@utils/validation";
+import { categorySchema , blogSchema } from "@utils/validation/validationSchema";
+import { validateRequestSchema } from "@utils/validation/validation";
 
 const router = Router();
 
