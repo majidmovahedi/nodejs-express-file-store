@@ -123,35 +123,33 @@ export class UserController {
 
         const user = await prisma.user.findUnique({
             where: { email : email }
-        }).then(async(user)=>{
+        })
+        .then(async(user)=>{
             const otpCode = await prisma.otp.findMany({
                 where: { userId : user?.id }
             })
             .then((otpCode)=>{
-                otpCode.map((item)=>{
+                otpCode.map(async(item)=>{
+
                     if( item.code == code && (item.expire_time.getTime() + 30 * 60000) > Date.now()){
 
-                        const updateUser = prisma.user.update({
-                            where: {
-                              email: email,
-                            },
-                            data: {
-                              is_active: true,
-                            },
-                          }).then((updateUser)=>{
-                            res.json("user activate")
-                            
-                          })
+                        await prisma.user.update({
+                            where: { email: email },
+                            data: { is_active: true },
+                        })
+                        .then(async ()=>{
+                            await prisma.otp.deleteMany({
+                                where: { userId: user?.id }
+                            })
+                            return res.json("user activate")
+
+                        })
 
                     }else{
-                        res.json("This Code is Invalid! or expired")
+                        return res.status(520).json("This Code is Invalid or expired!")
                     }
                 })
 
-
-            })
-            .catch((otpCode)=>{
-                // return res.status(520).json("This Code is Invalid!")
             })
 
         }).catch((user)=>{
