@@ -184,26 +184,8 @@ export class UserController {
 
         })
         .catch((error)=>{
-            res.json(error)
-            // return res.status(409).json("This User is Not Exist!")
+            return res.status(409).json("This User is Not Exist!")
         })
-        // const user = await prisma.user.delete({
-        //     where: { email : email },
-        // }).then(async (user)=>{
-        //     return res.status(200).json("User is Deleted Successfully.");
-        // }).catch(async (error)=>{
-        //     if (error.code == "P2025"){
-        //         return res.status(409).json("This User is Not Exist!")
-        //     }else if(error.code == "P2003"){
-
-        //         await prisma.blog.deleteMany({
-        //             where: { authorId: user.id }
-        //         })
-        //     }
-        //     else{
-        //         // return res.status(520).json("Unknown Error, Please Try Again Later.")
-        //         res.json(error)
-        //     }
-        // })
+        
     }
 }
