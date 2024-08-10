@@ -31,7 +31,7 @@ export class AdminBlogController {
     static async createBlog (req : Request , res : Response ) {
         const createdAt = new Date();
         const updatedAt = new Date();
-        const authorId = 1;
+        const authorId = 43;
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
         const result = await prisma.blog.create({

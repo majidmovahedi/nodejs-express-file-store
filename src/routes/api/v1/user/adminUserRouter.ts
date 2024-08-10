@@ -11,5 +11,6 @@ router.get('/:id', UserController.singleUser);
 router.post('/register', userSchema , validateRequestSchema , UserController.register);
 router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
 router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , UserController.verify);
+router.post('/delete', userSchema , validateRequestSchema , UserController.delete);
 
 export default router;
