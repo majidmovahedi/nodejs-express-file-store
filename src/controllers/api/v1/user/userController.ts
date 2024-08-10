@@ -159,25 +159,30 @@ export class UserController {
     };
 
     static async delete (req : Request , res : Response ) {
-        const { email } = req.body;
+        const { id } = req.params;
 
         const user = await prisma.user.findUnique({
-            where: { email : email }
+            where: { id : Number(id) }
         })
         .then(async(user)=>{
 
             //Delete User's Blog
             await prisma.blog.deleteMany({
-                where: { authorId: user?.id },
+                where: { authorId: Number(id) },
             })
 
             //Delete User's Product
             ////////
 
 
+            //Delete Otp
+            await prisma.otp.deleteMany({
+                where: { userId: user?.id }
+            })
+
             //Delete User
             await prisma.user.delete({
-                    where: { id : user?.id },
+                    where: { id : Number(id) },
                 }).then(()=>{
                     res.status(200).json("User is Deleted Successfully.");
                 })
@@ -233,7 +238,6 @@ export class UserController {
         const { email, code } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
-
         const user = await prisma.user.findUnique({
             where: { email : email }
         })
@@ -269,7 +273,6 @@ export class UserController {
                 return res.status(520).json("This User is Not Exist!")
             }
         })
-
 
     }
 }
