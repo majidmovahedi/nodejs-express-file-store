@@ -186,6 +186,90 @@ export class UserController {
         .catch((error)=>{
             return res.status(409).json("This User is Not Exist!")
         })
-        
+
+    }
+
+    static async forgetPassword (req : Request , res : Response ) {
+        const { email } = req.body;
+
+        // Find User
+        const user = await prisma.user.findUnique({
+            where: { email : email , is_active: true }
+        }).then(async(user)=>{
+
+            // Add OTP Code to otp Table
+            const userId = Number(user?.id);
+            const code = getRandomInt();
+            const result =await prisma.otp.create({
+                data:{
+                    userId,
+                    code,
+                },
+            }).then((result)=>{
+                res.status(200).json(result);
+            }).catch((error)=>{
+                res.status(520).json("Unknown Error, Please Try Again Later.")
+            })
+
+            // Send Code to User Email
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Reset Password Code',
+                html: `<h1>Your Reset Password Code is : ${code}</h1>`
+            }).then(() => {
+                res.json('OK, Email has been sent.');
+            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
+
+    };
+
+    static async newPassword (req : Request , res : Response ) {
+        const { email, code } = req.body;
+        const password = await bcrypt.hash(req.body.password, 10);
+
+
+        const user = await prisma.user.findUnique({
+            where: { email : email }
+        })
+        .then(async(user)=>{
+            const latestOtp = await prisma.otp.findFirst({
+                where: { userId : user?.id },
+                orderBy: {
+                    id: 'desc',
+                },
+                take: 1,
+        })
+        .then(async (latestOtp)=>{
+            if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
+
+                await prisma.user.update({
+                    where: { email: email },
+                    data: { password: password },
+                })
+                .then(async ()=>{
+                    await prisma.otp.deleteMany({
+                        where: { userId: user?.id }
+                    })
+                    return res.json("Your Password is Changed!")
+                })
+
+            }else{
+                return res.status(520).json("This Code is Invalid or expired!")
+            }
+        })
+
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
+
+
     }
 }

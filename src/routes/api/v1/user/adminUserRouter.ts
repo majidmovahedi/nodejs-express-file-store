@@ -12,5 +12,7 @@ router.post('/register', userSchema , validateRequestSchema , UserController.reg
 router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
 router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , UserController.verify);
 router.post('/delete', userSchema , validateRequestSchema , UserController.delete);
+router.post('/forget-password', userSchema , validateRequestSchema , UserController.forgetPassword);
+router.post('/new-password', userSchema , userVerifySchema , validateRequestSchema , UserController.newPassword);
 
 export default router;
