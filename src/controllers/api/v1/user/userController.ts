@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
 import { transporter } from "@utils/auth/sendEmails";
 import { getRandomInt } from "@utils/auth/codeGenerator";
+import jwt from "jsonwebtoken";
 const prisma = new PrismaClient()
 
 export class UserController {
@@ -278,7 +279,7 @@ export class UserController {
 
     static async login (req : Request , res : Response ) {
         const { email , password } = req.body;
-
+        const SecretKey = process.env.SECRET_KEY as string;
         // Find User
         const user = await prisma.user.findUnique({
             where: { email : email }
@@ -288,7 +289,8 @@ export class UserController {
             const match = await bcrypt.compare(password , userPassword );
 
             if(match) {
-                res.json("login")
+                const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
+                res.json({ token })
             }else{
                 res.json("Username Or Password is Incorrect!")
             }
