@@ -11,8 +11,9 @@ router.get('/:id', UserController.singleUser);
 router.post('/register', userSchema , validateRequestSchema , UserController.register);
 router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
 router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , UserController.verify);
-router.delete('/delete/:id', UserController.delete);
 router.post('/forget-password', userSchema , validateRequestSchema , UserController.forgetPassword);
 router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , UserController.newPassword);
+router.delete('/delete/:id', UserController.delete);
+router.post('/login', userSchema , validateRequestSchema , UserController.login);
 
 export default router;

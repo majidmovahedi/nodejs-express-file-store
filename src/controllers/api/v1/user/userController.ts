@@ -275,4 +275,29 @@ export class UserController {
         })
 
     }
+
+    static async login (req : Request , res : Response ) {
+        const { email , password } = req.body;
+
+        // Find User
+        const user = await prisma.user.findUnique({
+            where: { email : email }
+        }).then(async (user)=>{
+
+            const userPassword : any = user?.password;
+            const match = await bcrypt.compare(password , userPassword );
+
+            if(match) {
+                res.json("login")
+            }else{
+                res.json("Username Or Password is Incorrect!")
+            }
+
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
+
+    };
 }
