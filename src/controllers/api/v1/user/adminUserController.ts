@@ -6,7 +6,7 @@ import { getRandomInt } from "@utils/auth/codeGenerator";
 import jwt from "jsonwebtoken";
 const prisma = new PrismaClient()
 
-export class UserController {
+export class AdminUserController {
 
     // User CRUD
 
@@ -124,7 +124,7 @@ export class UserController {
         const user = await prisma.user.findUnique({
             where: { email : email , is_active: false }
         })
-        .then(async(user)=>{
+        .then(async (user)=>{
             const latestOtp = await prisma.otp.findFirst({
                 where: { userId : user?.id },
                 orderBy: {
@@ -302,4 +302,26 @@ export class UserController {
         })
 
     };
+
+    static async changePassword (req : Request , res : Response ) {
+
+        // //  @ts-ignore
+        // const userId = req.user.id;
+        // const password = await bcrypt.hash(req.body.password, 10);
+        const userId = req.params.id;
+        const newPassword = await bcrypt.hash(req.body.newPassword, 10);
+
+        const user = await prisma.user.findUnique({
+            where: { id : Number(userId) }
+        }).then(async(user)=>{
+                await prisma.user.update({
+                    where: { id: Number(userId) },
+                    data: { password: newPassword },
+                }).then(()=>{
+                    return res.json("Password changed")
+                }).catch((error)=>{
+                    return res.json(error)
+                })
+        })
+    }
 }

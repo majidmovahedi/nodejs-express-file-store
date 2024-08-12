@@ -3,22 +3,20 @@ import jwt from "jsonwebtoken";
 
 const SecretKey = process.env.SECRET_KEY as string;
 
-// interface JwtPayload {
-//     id: string;
-// }
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
 
-export function authenticateToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('Authorization')?.split(' ')[1];
+    const token = req.header('Authorization')?.replace('Bearer ', '');
 
-    if (!token) return res.sendStatus(401);
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
 
-    try {
-        const payload = jwt.verify(token, SecretKey);
-        // console.log(payload)
-        // console.log(next(payload.id))
-        return next();
-
-    } catch (err) {
-        res.sendStatus(403);
-    }
+        jwt.verify(token, SecretKey, (err, user) => {
+            if (err) {
+                return res.status(401).json({ message: 'Invalid token' });
+            }
+            //@ts-ignore
+            req.user = user;
+            next();
+        });
 }
