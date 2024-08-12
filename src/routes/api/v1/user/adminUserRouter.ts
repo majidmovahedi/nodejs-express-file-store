@@ -7,8 +7,9 @@ import { authenticateToken } from "@middleware/auth";
 const router = Router();
 
 // User Router
-router.get('/', authenticateToken , UserController.allUser);
+router.get('/', UserController.allUser);
 router.get('/:id', UserController.singleUser);
+// router.get('/:id', authenticateToken , UserController.singleUser);
 router.post('/register', userSchema , validateRequestSchema , UserController.register);
 router.post('/resend', userSchema , validateRequestSchema , UserController.resend);
 router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , UserController.verify);
@@ -16,6 +17,5 @@ router.post('/forget-password', userSchema , validateRequestSchema , UserControl
 router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , UserController.newPassword);
 router.delete('/delete/:id', UserController.delete);
 router.post('/login', userSchema , validateRequestSchema , UserController.login);
-// router.post('/login', userSchema , validateRequestSchema , authenticateToken , UserController.login);
 
 export default router;

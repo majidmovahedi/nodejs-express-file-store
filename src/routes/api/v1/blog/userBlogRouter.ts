@@ -4,6 +4,14 @@ import { UserBlogController } from "@controllers/api/v1/blog/userBlogController"
 const router = Router();
 
 // User Blog Router
+
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Get a list of all blogs
+ */
+//Get All Blogs
 router.get('/', UserBlogController.allBlog);
 router.get('/:id', UserBlogController.singleBlog);
 
