@@ -304,10 +304,8 @@ export class AdminUserController {
     };
 
     static async changePassword (req : Request , res : Response ) {
-
-        // //  @ts-ignore
-        // const userId = req.user.id;
         // const password = await bcrypt.hash(req.body.password, 10);
+
         const userId = req.params.id;
         const newPassword = await bcrypt.hash(req.body.newPassword, 10);
 

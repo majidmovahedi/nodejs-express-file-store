@@ -1,5 +1,7 @@
 import { Request , Response , NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
 
 const SecretKey = process.env.SECRET_KEY as string;
 
@@ -19,4 +21,20 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
             req.user = user;
             next();
         });
+}
+
+export async function adminMiddleware(req: Request, res: Response, next: NextFunction) {
+
+     //  @ts-ignore
+    const userId = req.user.id;
+
+    const user = await prisma.user.findUnique({
+            where: { id : userId }
+        }).then(async(user)=>{
+            if (user?.type == true){
+                next()
+            }else{
+                res.json("You Dont Have Permission!")
+            }
+        })
 }

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { AdminUserController } from "@controllers/api/v1/user/adminUserController";
 import { userSchema , userVerifySchema } from "@utils/validation/validationSchema";
 import { validateRequestSchema } from "@utils/validation/validation";
-import { authMiddleware } from "@middleware/auth";
+import { authMiddleware , adminMiddleware } from "@middleware/auth";
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.post('/forget-password', userSchema , validateRequestSchema , AdminUserCo
 router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.newPassword);
 router.delete('/delete/:id', AdminUserController.delete);
 router.post('/login', userSchema , validateRequestSchema , AdminUserController.login);
-router.put('/change-password/:id' , AdminUserController.changePassword);
-// router.put('/change-password/:id', authMiddleware  , AdminUserController.changePassword);
+// router.put('/change-password/:id' , AdminUserController.changePassword);
+router.put('/change-password/:id', authMiddleware , adminMiddleware , AdminUserController.changePassword);
 
 export default router;
