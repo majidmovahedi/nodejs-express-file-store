@@ -25,7 +25,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
 export async function adminMiddleware(req: Request, res: Response, next: NextFunction) {
 
-     //  @ts-ignore
+    //  @ts-ignore
     const userId = req.user.id;
 
     const user = await prisma.user.findUnique({
