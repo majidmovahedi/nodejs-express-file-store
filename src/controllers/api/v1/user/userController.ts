@@ -1,4 +1,4 @@
-import { Request , Response } from "express";
+import { NextFunction, Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
 import { transporter } from "@utils/auth/sendEmails";
@@ -24,44 +24,51 @@ export class UserController {
 
     }
 
-    static async register (req : Request , res : Response ) {
+    static async register(req: Request, res: Response) {
         const { fullname, email } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
-        const result = await prisma.user.create({
-            data: {
-                fullname,
-                email,
-                password,
-            },
-        }).then(async (result)=>{
-            res.status(201).json(result);
+            // Create the user
+            const result = await prisma.user.create({
+                data: {
+                    fullname,
+                    email,
+                    password,
+                },
+            }).then(async (result)=>{
 
-        // Add OTP Code to otp Table
-        const userId = Number(result?.id);
-        const code = getRandomInt();
-        const otpCode =await prisma.otp.create({
-            data:{
-                userId,
-                code,
-            },
-        })
+                // Add OTP Code to otp Table
+                const userId = Number(result?.id);
+                const code = getRandomInt();
+                await prisma.otp.create({
+                    data: {
+                        userId,
+                        code,
+                    },
+                });
 
-        // Send Code to User Email
-        await transporter.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Activation Code',
-            html: `<h1>Your Activation Code is : ${code}</h1>`
-        })
+                // Send Code to User Email
+                await transporter.sendMail({
+                    from: process.env.EMAIL,
+                    to: email,
+                    subject: 'Activation Code',
+                    html: `<h1>Your Activation Code is : ${code}</h1>`
+                });
 
-        }).catch((error)=>{
-            if (error.code == "P2002"){
-                return res.status(409).json("This User is Already Exist!")
-            }else{
-                return res.status(520).json("Unknown Error, Please Try Again Later.")
-            }
-        })
+            return res.status(201).json(result);
+
+            }).catch((error)=>{
+                if (error.code == "P2002"){
+                    return res.status(409).json("This User is Already Exist!")
+                }
+                else if (error.code == 'EMESSAGE'){
+                    return res.json("Email server error")
+                }
+                else{
+                    return res.status(520).json("Unknown Error, Please Try Again Later.")
+                }
+            })
+            
     }
 
     static async resend (req : Request , res : Response ) {
@@ -269,7 +276,7 @@ export class UserController {
         const SecretKey = process.env.SECRET_KEY as string;
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email }
+            where: { email : email , is_active: true }
         }).then(async (user)=>{
 
             const userPassword : any = user?.password;
@@ -289,4 +296,38 @@ export class UserController {
         })
 
     };
+
+    static async changePassword (req : Request , res : Response ) {
+        //  @ts-ignore
+        const userId = req.user.id;
+
+        const password = await bcrypt.hash(req.body.password, 10);
+        const newPassword = await bcrypt.hash(req.body.newPassword, 10);
+        const repeatNewPassword = await bcrypt.hash(req.body.repeatNewPassword, 10);
+
+        if(newPassword == repeatNewPassword){
+            const user = await prisma.user.findUnique({
+                where: { id : userId }
+            }).then(async(user)=>{
+
+                if(user?.password == password){
+
+                    await prisma.user.update({
+                        where: { id: user.id },
+                        data: { password: newPassword },
+                    }).then(()=>{
+                        return res.json("Password changed")
+                    }).catch((error)=>{
+                        return res.json(error)
+                    })
+
+                }else{
+                    return res.json("Password is Incorrect")
+                }
+            })
+        }else{
+            return res.json("Password Does Not Match")
+        }
+
+    }
 }

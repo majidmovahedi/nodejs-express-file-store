@@ -32,47 +32,27 @@ export class AdminUserController {
     }
 
     static async register (req : Request , res : Response ) {
-        const type = Boolean(req.body.type);
+        // const type = Boolean(req.body.type);
         const password = await bcrypt.hash(req.body.password, 10);
-        const { fullname, email } = req.body;
+        const { fullname, email , is_active , type} = req.body;
 
         const result = await prisma.user.create({
             data: {
                 fullname,
                 email,
                 password,
-                type
+                type,
+                is_active
         },
         }).then(async (result)=>{
-            res.status(201).json(result);
 
-
-        // Add OTP Code to otp Table
-        const userId = Number(result?.id);
-        const code = getRandomInt();
-        const otpCode =await prisma.otp.create({
-            data:{
-                userId,
-                code,
-            },
-        })
-
-        // Send Code to User Email
-        await transporter.sendMail({
-            from: process.env.EMAIL,
-            to: email,
-            subject: 'Activation Code',
-            html: `<h1>Your Activation Code is : ${code}</h1>`
-        })
-        // .then(() => {
-        //     res.json('OK, Email has been sent.');
-        // })
-        // .catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+            return res.status(201).json(result);
 
         }).catch((error)=>{
             if (error.code == "P2002"){
                 return res.status(409).json("This User is Already Exist!")
-            }else{
+            }
+            else{
                 return res.status(520).json("Unknown Error, Please Try Again Later.")
             }
         })
@@ -282,7 +262,7 @@ export class AdminUserController {
         const SecretKey = process.env.SECRET_KEY as string;
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email }
+            where: { email : email , is_active: true}
         }).then(async (user)=>{
 
             const userPassword : any = user?.password;

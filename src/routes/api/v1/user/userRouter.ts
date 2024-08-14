@@ -15,6 +15,7 @@ router.post('/forget-password', userSchema , validateRequestSchema , UserControl
 router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , UserController.newPassword);
 router.delete('/delete', authMiddleware ,UserController.delete);
 router.post('/login', userSchema , validateRequestSchema , UserController.login);
-// router.put('/change-password', authMiddleware , UserController.changePassword);
+router.put('/change-password', authMiddleware , UserController.changePassword);
+// router.put('/update', authMiddleware , UserController.update);
 
 export default router;

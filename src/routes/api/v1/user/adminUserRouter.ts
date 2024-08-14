@@ -9,7 +9,7 @@ const router = Router();
 // Admin User Router
 router.get('/' , authMiddleware , adminMiddleware , AdminUserController.allUser);
 router.get('/:id', AdminUserController.singleUser);
-router.post('/register', userSchema , validateRequestSchema , AdminUserController.register);
+router.post('/register', userSchema , validateRequestSchema , authMiddleware , adminMiddleware , AdminUserController.register);
 router.post('/resend', userSchema , validateRequestSchema , AdminUserController.resend);
 router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.verify);
 router.post('/forget-password', userSchema , validateRequestSchema , AdminUserController.forgetPassword);
