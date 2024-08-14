@@ -83,25 +83,30 @@ export class UserController {
                 return res.status(520).json("Your Account is Active!")
             }
 
-            // Add OTP Code to otp Table
-            const userId = Number(user?.id);
-            const code = getRandomInt();
-            const result = await prisma.otp.create({
-                data:{
-                    userId,
-                    code,
-                },
-            }).then((result)=>{
-                res.status(200).json(result);
-            })
+            try {
+                // Add OTP Code to otp Table
+                const userId = Number(user?.id);
+                const code = getRandomInt();
+                const result = await prisma.otp.create({
+                    data:{
+                        userId,
+                        code,
+                    },
+                })
 
-            // Send Code to User Email
-            await transporter.sendMail({
-                from: process.env.EMAIL,
-                to: email,
-                subject: 'Activation Code',
-                html: `<h1>Your Activation Code is : ${code}</h1>`
-            })
+                // Send Code to User Email
+                await transporter.sendMail({
+                    from: process.env.EMAIL,
+                    to: email,
+                    subject: 'Activation Code',
+                    html: `<h1>Your Activation Code is : ${code}</h1>`
+                })
+            return res.json(result)
+
+            } catch (error) {
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
+
 
         }).catch((user)=>{
             if(email != user.email){
@@ -162,35 +167,41 @@ export class UserController {
 
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: true }
-        }).then(async(user)=>{
+            where: { email : email }
+        }).then(async (user)=>{
 
-            // Add OTP Code to otp Table
-            const userId = Number(user?.id);
-            const code = getRandomInt();
-            const result =await prisma.otp.create({
-                data:{
-                    userId,
-                    code,
-                },
-            }).then((result)=>{
-                res.status(200).json(result);
-            }).catch((error)=>{
-                res.status(520).json("Unknown Error, Please Try Again Later.")
-            })
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!")
+            }
 
-            // Send Code to User Email
-            await transporter.sendMail({
-                from: process.env.EMAIL,
-                to: email,
-                subject: 'Reset Password Code',
-                html: `<h1>Your Reset Password Code is : ${code}</h1>`
-            }).then(() => {
-                res.json('OK, Email has been sent.');
-            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+            try {
+                // Add OTP Code to otp Table
+                const userId = Number(user?.id);
+                const code = getRandomInt();
+                const result =await prisma.otp.create({
+                    data:{
+                        userId,
+                        code,
+                    },
+                });
+
+                // Send Code to User Email
+                await transporter.sendMail({
+                    from: process.env.EMAIL,
+                    to: email,
+                    subject: 'Reset Password Code',
+                    html: `<h1>Your Reset Password Code is : ${code}</h1>`
+                });
+
+            return res.json(result)
+
+            } catch (error) {
+                return res.status(520).json("Unknown Error, Please Try Again Later.")
+            }
+
 
         }).catch((user)=>{
-            if(user === null){
+            if(email != user.email){
                 return res.status(520).json("This User is Not Exist!")
             }
         })
@@ -205,6 +216,11 @@ export class UserController {
             where: { email : email }
         })
         .then(async(user)=>{
+
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!")
+            }
+
             const latestOtp = await prisma.otp.findFirst({
                 where: { userId : user?.id },
                 orderBy: {
@@ -232,7 +248,7 @@ export class UserController {
         })
 
         }).catch((user)=>{
-            if(user === null){
+            if(email != user.email){
                 return res.status(520).json("This User is Not Exist!")
             }
         })
