@@ -357,6 +357,31 @@ export class UserController {
 
         })
 
+    }
+
+    static async update (req : Request , res : Response ) {
+        //  @ts-ignore
+        const userId = req.user.id;
+
+        const { fullname, email } = req.body;
+
+        const user = await prisma.user.findUnique({
+            where: { id : userId }
+        }).then(async (user)=>{
+
+            const update = await prisma.user.update({
+                where: { id: user?.id },
+                data: {
+                    fullname,
+                    email
+                },
+            }).then((update)=>{
+                return res.json(update)
+            }).catch((error)=>{
+                return res.json(error)
+            })
+
+        })
 
     }
 }

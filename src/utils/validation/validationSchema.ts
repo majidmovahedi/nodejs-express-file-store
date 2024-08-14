@@ -43,6 +43,12 @@ export const passwordSchema =[
     body('repeatNewPassword').notEmpty().withMessage('repeat new password Cant be Null!'),
 ]
 
+export const updateSchema =[
+    // name null
+    // email null
+    // body('email').isEmail().withMessage('Please Enter Valid Email!')
+]
+
 export const userVerifySchema = [
     body('code').isLength({min: 4 , max: 4}).withMessage('Code Must be Four digits!'),
     body('code').isNumeric().withMessage('Please Enter The Number Correctly!'),
