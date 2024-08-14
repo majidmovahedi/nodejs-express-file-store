@@ -115,9 +115,14 @@ export class UserController {
         const { email, code } = req.body;
 
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: false }
+            where: { email : email}
         })
         .then(async (user)=>{
+
+            if (user?.is_active == true){
+                return res.status(520).json("Your Account is Active!")
+            }
+
             const latestOtp = await prisma.otp.findFirst({
                 where: { userId : user?.id },
                 orderBy: {
@@ -145,7 +150,7 @@ export class UserController {
         })
 
         }).catch((user)=>{
-            if(user === null){
+            if(email != user.email){
                 return res.status(520).json("This User is Not Exist!")
             }
         })
