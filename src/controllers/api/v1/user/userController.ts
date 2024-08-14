@@ -68,7 +68,7 @@ export class UserController {
                     return res.status(520).json("Unknown Error, Please Try Again Later.")
                 }
             })
-            
+
     }
 
     static async resend (req : Request , res : Response ) {
@@ -76,21 +76,23 @@ export class UserController {
 
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: false }
-        }).then(async(user)=>{
+            where: { email : email }
+        }).then(async (user)=>{
+
+            if (user?.is_active == true){
+                return res.status(520).json("Your Account is Active!")
+            }
 
             // Add OTP Code to otp Table
             const userId = Number(user?.id);
             const code = getRandomInt();
-            const result =await prisma.otp.create({
+            const result = await prisma.otp.create({
                 data:{
                     userId,
                     code,
                 },
             }).then((result)=>{
                 res.status(200).json(result);
-            }).catch((error)=>{
-                return res.status(520).json("Unknown Error, Please Try Again Later.")
             })
 
             // Send Code to User Email
@@ -99,12 +101,10 @@ export class UserController {
                 to: email,
                 subject: 'Activation Code',
                 html: `<h1>Your Activation Code is : ${code}</h1>`
-            }).then(() => {
-                res.json('OK, Email has been sent.');
-            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+            })
 
         }).catch((user)=>{
-            if(user === null){
+            if(email != user.email){
                 return res.status(520).json("This User is Not Exist!")
             }
         })
