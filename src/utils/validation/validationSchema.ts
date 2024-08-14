@@ -36,6 +36,13 @@ export const userSchema  = [
     body('email').notEmpty().withMessage('Email Cant be Null!'),
     body('email').isEmail().withMessage('Please Enter Valid Email!'),
 ]
+
+export const passwordSchema =[
+    body('password').notEmpty().withMessage('password Cant be Null!'),
+    body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
+    body('repeatNewPassword').notEmpty().withMessage('repeat new password Cant be Null!'),
+]
+
 export const userVerifySchema = [
     body('code').isLength({min: 4 , max: 4}).withMessage('Code Must be Four digits!'),
     body('code').isNumeric().withMessage('Please Enter The Number Correctly!'),

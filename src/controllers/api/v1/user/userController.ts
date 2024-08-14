@@ -295,10 +295,15 @@ export class UserController {
     static async login (req : Request , res : Response ) {
         const { email , password } = req.body;
         const SecretKey = process.env.SECRET_KEY as string;
+
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: true }
+            where: { email : email }
         }).then(async (user)=>{
+
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!")
+            }
 
             const userPassword : any = user?.password;
             const match = await bcrypt.compare(password , userPassword );
@@ -311,7 +316,7 @@ export class UserController {
             }
 
         }).catch((user)=>{
-            if(user === null){
+            if(email != user.email){
                 return res.status(520).json("This User is Not Exist!")
             }
         })
@@ -322,33 +327,36 @@ export class UserController {
         //  @ts-ignore
         const userId = req.user.id;
 
-        const password = await bcrypt.hash(req.body.password, 10);
-        const newPassword = await bcrypt.hash(req.body.newPassword, 10);
-        const repeatNewPassword = await bcrypt.hash(req.body.repeatNewPassword, 10);
+        const { password , newPassword , repeatNewPassword } = req.body;
 
-        if(newPassword == repeatNewPassword){
-            const user = await prisma.user.findUnique({
-                where: { id : userId }
-            }).then(async(user)=>{
-
-                if(user?.password == password){
-
-                    await prisma.user.update({
-                        where: { id: user.id },
-                        data: { password: newPassword },
-                    }).then(()=>{
-                        return res.json("Password changed")
-                    }).catch((error)=>{
-                        return res.json(error)
-                    })
-
-                }else{
-                    return res.json("Password is Incorrect")
-                }
-            })
-        }else{
-            return res.json("Password Does Not Match")
+        if(newPassword != repeatNewPassword){
+            return res.json("New Password Does Not Match")
         }
+
+        const user = await prisma.user.findUnique({
+            where: { id : userId }
+        }).then(async (user)=>{
+
+            const newPass = await bcrypt.hash(newPassword, 10);
+            const userPassword: any = user?.password;
+
+            const match = await bcrypt.compare(password , userPassword);
+
+            if(!match){
+                return res.json("Password is Incorrect")
+            }
+
+            await prisma.user.update({
+                where: { id: user?.id },
+                data: { password: newPass },
+            }).then(()=>{
+                return res.json("Password changed")
+            }).catch((error)=>{
+                return res.json(error)
+            })
+
+        })
+
 
     }
 }

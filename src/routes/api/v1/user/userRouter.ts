@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "@controllers/api/v1/user/userController";
-import { userSchema , userVerifySchema } from "@utils/validation/validationSchema";
+import { userSchema , userVerifySchema , passwordSchema} from "@utils/validation/validationSchema";
 import { validateRequestSchema } from "@utils/validation/validation";
 import { authMiddleware } from "@middleware/auth";
 
@@ -15,7 +15,7 @@ router.post('/forget-password', userSchema , validateRequestSchema , UserControl
 router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , UserController.newPassword);
 router.delete('/delete', authMiddleware ,UserController.delete);
 router.post('/login', userSchema , validateRequestSchema , UserController.login);
-router.put('/change-password', authMiddleware , UserController.changePassword);
+router.put('/change-password', passwordSchema , validateRequestSchema , authMiddleware , UserController.changePassword);
 // router.put('/update', authMiddleware , UserController.update);
 
 export default router;
