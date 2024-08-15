@@ -378,6 +378,9 @@ export class UserController {
             }).then((update)=>{
                 return res.status(200).json(update);
             }).catch((error)=>{
+                if (error.code == "P2002"){
+                    return res.status(409).json("This Email is Already Taken!");
+                }
                 return res.json(error);
             })
 
