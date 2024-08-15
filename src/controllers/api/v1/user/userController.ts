@@ -1,4 +1,4 @@
-import { NextFunction, Request , Response } from "express";
+import { Request , Response } from "express";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcrypt";
 import { transporter } from "@utils/auth/sendEmails";
@@ -16,13 +16,13 @@ export class UserController {
             where: { id : userId }
         })
         .then((user)=>{
-            return res.json(user);
+            return res.status(200).json(user);
         })
-        .catch((error)=>{
-            return res.json(error)
-        })
+        // .catch((error)=>{
+        //     return res.json(error)
+        // })
 
-    }
+    };
 
     static async register(req: Request, res: Response) {
         const { fullname, email } = req.body;
@@ -59,17 +59,17 @@ export class UserController {
 
             }).catch((error)=>{
                 if (error.code == "P2002"){
-                    return res.status(409).json("This User is Already Exist!")
+                    return res.status(409).json("This User is Already Exist!");
                 }
                 else if (error.code == 'EMESSAGE'){
-                    return res.json("Email server error")
+                    return res.status(500).json("Email server error");
                 }
                 else{
-                    return res.status(520).json("Unknown Error, Please Try Again Later.")
+                    return res.status(520).json("Unknown Error, Please Try Again Later.");
                 }
             })
 
-    }
+    };
 
     static async resend (req : Request , res : Response ) {
         const { email } = req.body;
@@ -80,7 +80,7 @@ export class UserController {
         }).then(async (user)=>{
 
             if (user?.is_active == true){
-                return res.status(520).json("Your Account is Active!")
+                return res.status(400).json("Your Account is Active!");
             }
 
             try {
@@ -101,16 +101,16 @@ export class UserController {
                     subject: 'Activation Code',
                     html: `<h1>Your Activation Code is : ${code}</h1>`
                 })
-            return res.json(result)
+            return res.json(result);
 
             } catch (error) {
-                return res.status(520).json("Unknown Error, Please Try Again Later.")
+                return res.status(520).json("Unknown Error, Please Try Again Later.");
             }
 
 
         }).catch((user)=>{
             if(email != user.email){
-                return res.status(520).json("This User is Not Exist!")
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
@@ -125,7 +125,7 @@ export class UserController {
         .then(async (user)=>{
 
             if (user?.is_active == true){
-                return res.status(520).json("Your Account is Active!")
+                return res.status(200).json("Your Account is Active!");
             }
 
             const latestOtp = await prisma.otp.findFirst({
@@ -146,17 +146,17 @@ export class UserController {
                     await prisma.otp.deleteMany({
                         where: { userId: user?.id }
                     })
-                    return res.json("user activate")
+                    return res.status(200).json("Your Account is Activate");
                 })
 
             }else{
-                return res.status(520).json("This Code is Invalid or expired!")
+                return res.status(408).json("This Code is Invalid or expired!");
             }
         })
 
         }).catch((user)=>{
             if(email != user.email){
-                return res.status(520).json("This User is Not Exist!")
+                return res.status(520).json("This User is Not Exist!");
             }
         })
 
@@ -171,7 +171,7 @@ export class UserController {
         }).then(async (user)=>{
 
             if (user?.is_active == false){
-                return res.json("Your Account is Deactive!")
+                return res.json("Your Account is Deactive!");
             }
 
             try {
@@ -193,16 +193,16 @@ export class UserController {
                     html: `<h1>Your Reset Password Code is : ${code}</h1>`
                 });
 
-            return res.json(result)
+            return res.json(result);
 
             } catch (error) {
-                return res.status(520).json("Unknown Error, Please Try Again Later.")
+                return res.status(520).json("Unknown Error, Please Try Again Later.");
             }
 
 
         }).catch((user)=>{
             if(email != user.email){
-                return res.status(520).json("This User is Not Exist!")
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
@@ -218,7 +218,7 @@ export class UserController {
         .then(async(user)=>{
 
             if (user?.is_active == false){
-                return res.json("Your Account is Deactive!")
+                return res.json("Your Account is Deactive!");
             }
 
             const latestOtp = await prisma.otp.findFirst({
@@ -239,21 +239,21 @@ export class UserController {
                     await prisma.otp.deleteMany({
                         where: { userId: user?.id }
                     })
-                    return res.json("Your Password is Changed!")
+                    return res.status(200).json("Your Password is Changed!");
                 })
 
             }else{
-                return res.status(520).json("This Code is Invalid or expired!")
+                return res.status(408).json("This Code is Invalid or expired!");
             }
         })
 
         }).catch((user)=>{
             if(email != user.email){
-                return res.status(520).json("This User is Not Exist!")
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
-    }
+    };
 
     static async delete (req : Request , res : Response ) {
         //  @ts-ignore
@@ -287,10 +287,10 @@ export class UserController {
 
         })
         .catch((error)=>{
-            return res.json(error)
+            return res.json(error);
         })
 
-    }
+    };
 
     static async login (req : Request , res : Response ) {
         const { email , password } = req.body;
@@ -302,7 +302,7 @@ export class UserController {
         }).then(async (user)=>{
 
             if (user?.is_active == false){
-                return res.json("Your Account is Deactive!")
+                return res.json("Your Account is Deactive!");
             }
 
             const userPassword : any = user?.password;
@@ -312,12 +312,12 @@ export class UserController {
                 const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
                 res.json({ token })
             }else{
-                res.json("Username Or Password is Incorrect!")
+                res.status(401).json("Username Or Password is Incorrect!");
             }
 
         }).catch((user)=>{
             if(email != user.email){
-                return res.status(520).json("This User is Not Exist!")
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
@@ -330,7 +330,7 @@ export class UserController {
         const { password , newPassword , repeatNewPassword } = req.body;
 
         if(newPassword != repeatNewPassword){
-            return res.json("New Password Does Not Match")
+            return res.json("New Password Does Not Match");
         }
 
         const user = await prisma.user.findUnique({
@@ -343,21 +343,21 @@ export class UserController {
             const match = await bcrypt.compare(password , userPassword);
 
             if(!match){
-                return res.json("Password is Incorrect")
+                return res.status(401).json("Password is Incorrect");
             }
 
             await prisma.user.update({
                 where: { id: user?.id },
                 data: { password: newPass },
             }).then(()=>{
-                return res.json("Password changed")
+                return res.status(200).json("Password changed");
             }).catch((error)=>{
-                return res.json(error)
+                return res.json(error);
             })
 
         })
 
-    }
+    };
 
     static async update (req : Request , res : Response ) {
         //  @ts-ignore
@@ -376,12 +376,12 @@ export class UserController {
                     email
                 },
             }).then((update)=>{
-                return res.json(update)
+                return res.status(200).json(update);
             }).catch((error)=>{
-                return res.json(error)
+                return res.json(error);
             })
 
         })
 
-    }
+    };
 }

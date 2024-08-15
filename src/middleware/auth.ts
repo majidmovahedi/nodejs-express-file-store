@@ -36,7 +36,7 @@ export async function adminMiddleware(req: Request, res: Response, next: NextFun
             if (user?.type == true){
                 next()
             }else{
-                res.json("You Dont Have Permission!")
+                res.status(401).json("You Dont Have Permission!")
             }
         })
 }
