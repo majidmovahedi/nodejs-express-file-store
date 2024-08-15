@@ -38,7 +38,7 @@ export const userSchema  = [
 ]
 
 export const passwordSchema =[
-    body('password').notEmpty().withMessage('password Cant be Null!'),
+    // body('password').notEmpty().withMessage('password Cant be Null!'),
     body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
     body('repeatNewPassword').notEmpty().withMessage('repeat new password Cant be Null!'),
 ]
