@@ -51,8 +51,9 @@ export const passwordSchema =[
 
 export const updateSchema =[
     // name null
-    // email null
-    // body('email').isEmail().withMessage('Please Enter Valid Email!')
+    body('fullname').optional().notEmpty().withMessage('FullName Cant be Null!'),
+    body('email').optional().notEmpty().withMessage('Email Cant be Null!'),
+    body('email').optional().isEmail().withMessage('Please Enter Valid Email!')
 ]
 
 export const userVerifySchema = [

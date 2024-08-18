@@ -17,7 +17,6 @@ router.put('/new-password', userSchema , userVerifySchema , validateRequestSchem
 router.delete('/delete', authMiddleware ,UserController.delete);
 router.post('/login', userSchema , validateRequestSchema , AdminUserController.login);
 router.put('/change-password', passwordSchema , validateRequestSchema , authMiddleware , UserController.changePassword);
-router.put('/update', authMiddleware , UserController.update);
-// router.put('/update', updateSchema , validateRequestSchema , authMiddleware , UserController.update);
+router.put('/update', updateSchema , validateRequestSchema , authMiddleware , UserController.update);
 
 export default router;

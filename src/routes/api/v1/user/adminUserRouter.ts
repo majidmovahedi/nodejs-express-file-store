@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AdminUserController } from "@controllers/api/v1/user/adminUserController";
-import { userSchema , userVerifySchema , passwordSchema , paramSchema} from "@utils/validation/validationSchema";
+import { userSchema , userVerifySchema , passwordSchema , paramSchema , updateSchema} from "@utils/validation/validationSchema";
 import { validateRequestSchema } from "@utils/validation/validation";
 import { authMiddleware , adminMiddleware } from "@middleware/auth";
 
@@ -21,6 +21,6 @@ router.post('/register', userSchema , validateRequestSchema , AdminUserControlle
 router.delete('/delete/:id', paramSchema , validateRequestSchema , AdminUserController.delete);
 router.post('/login', userSchema , validateRequestSchema , AdminUserController.login);
 router.put('/change-password/:id', paramSchema , passwordSchema , validateRequestSchema , AdminUserController.changePassword);
-router.put('/update/:id', paramSchema , validateRequestSchema , AdminUserController.update);
+router.put('/update/:id', updateSchema , paramSchema , validateRequestSchema , AdminUserController.update);
 
 export default router;
