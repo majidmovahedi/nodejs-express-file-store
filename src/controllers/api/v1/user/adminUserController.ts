@@ -287,9 +287,9 @@ export class AdminUserController {
             if(match) {
                 const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
                 res.json({ token })
-            }else{
-                res.status(401).json("Username Or Password is Incorrect!");
             }
+            return res.status(401).json("Username Or Password is Incorrect!");
+
 
         }).catch((user)=>{
             if(email != user.email){

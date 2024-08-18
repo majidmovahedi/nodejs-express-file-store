@@ -2,7 +2,7 @@ import { body, param } from 'express-validator';
 import validUrl from "valid-url";
 
 export const paramSchema = [
-    param('id').isInt().withMessage('ID must be an integer'),
+    param('id').isInt().withMessage('ID Must be an Integer'),
 ]
 
 export const categorySchema  = [
@@ -22,41 +22,36 @@ export const blogSchema  = [
             return value === req.body.imageurl;
         }
     }).withMessage('Invalid Url'),
-
-    // body('title').custom((value, { req }) => {
-    //     if (typeof value === 'string'){
-    //         return value === req.body.title;
-    //     }
-    // }).withMessage('Title Must be String!'),
-
-    // body('title').custom(async value => {
-    //     const existingUser = await Users.findUserByEmail(value);
-    //     if (existingUser) {
-    //       throw new Error('E-mail already in use');
-    //     }
-    //   }),
 ]
 
-
-export const userSchema  = [
+export const userLoginSchema  = [
     body('email').notEmpty().withMessage('Email Cant be Null!'),
     body('email').isEmail().withMessage('Please Enter Valid Email!'),
+    body('password').notEmpty().withMessage('Please Enter Password'),
+]
+
+export const userRegisterSchema  = [
+    body('fullname').notEmpty().withMessage('Please Enter Fullname'),
+    body('email').notEmpty().withMessage('Email Cant be Null!'),
+    body('email').isEmail().withMessage('Please Enter Valid Email!'),
+    body('password').notEmpty().withMessage('Please Enter Password'),
 ]
 
 export const passwordSchema =[
-    // body('password').notEmpty().withMessage('password Cant be Null!'),
-    body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
-    body('repeatNewPassword').notEmpty().withMessage('repeat new password Cant be Null!'),
+    body('password').notEmpty().withMessage('password Cant be Null!'),
+    body('newPassword').optional().notEmpty().withMessage('new password Cant be Null!'),
+    body('repeatNewPassword').optional().notEmpty().withMessage('repeat new password Cant be Null!'),
 ]
 
 export const updateSchema =[
-    // name null
     body('fullname').optional().notEmpty().withMessage('FullName Cant be Null!'),
     body('email').optional().notEmpty().withMessage('Email Cant be Null!'),
     body('email').optional().isEmail().withMessage('Please Enter Valid Email!')
 ]
 
-export const userVerifySchema = [
-    body('code').isLength({min: 4 , max: 4}).withMessage('Code Must be Four digits!'),
-    body('code').isNumeric().withMessage('Please Enter The Number Correctly!'),
+export const commonSchema = [
+    body('email').notEmpty().withMessage('Email Cant be Null!'),
+    body('email').isEmail().withMessage('Please Enter Valid Email!'),
+    body('code').optional().isLength({min: 4 , max: 4}).withMessage('Code Must be Four digits!'),
+    body('code').optional().isNumeric().withMessage('Please Enter The Number Correctly!'),
 ]

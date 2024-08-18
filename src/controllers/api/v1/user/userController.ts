@@ -104,15 +104,19 @@ export class UserController {
             return res.json(result);
 
             } catch (error) {
+                if(!user){
+                    return res.status(404).json("This User is Not Exist!");
+                }
                 return res.status(520).json("Unknown Error, Please Try Again Later.");
             }
 
-
-        }).catch((user)=>{
-            if(email != user.email){
-                return res.status(404).json("This User is Not Exist!");
-            }
         })
+        // .catch((user)=>{
+        //     if(!user){
+        //         return res.status(404).json("This User is Not Exist!");
+        //     }
+        //     return res.status(520).json("Unknown Error, Please Try Again Later.");
+        // })
 
     };
 
