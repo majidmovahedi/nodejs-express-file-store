@@ -1,4 +1,4 @@
-import { Request , Response , NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient()
@@ -17,9 +17,9 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
             if (err) {
                 return res.status(401).json({ message: 'Invalid token' });
             }
-            //  @ts-ignore
-            req.user = user;
-            // (req as any).user = user;
+            if (user) {
+                req.user = { id: Number(user) };
+            }
 
             next();
         });
@@ -27,7 +27,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
 export async function adminMiddleware(req: Request, res: Response, next: NextFunction) {
 
-    //  @ts-ignore
     const userId = req.user.id;
 
     const user = await prisma.user.findUnique({
