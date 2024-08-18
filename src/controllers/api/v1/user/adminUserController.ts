@@ -180,36 +180,42 @@ export class AdminUserController {
 
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: true }
-        }).then(async(user)=>{
+            where: { email : email }
+        }).then(async (user)=>{
 
-            // Add OTP Code to otp Table
-            const userId = Number(user?.id);
-            const code = getRandomInt();
-            const result =await prisma.otp.create({
-                data:{
-                    userId,
-                    code,
-                },
-            }).then((result)=>{
-                res.status(200).json(result);
-            }).catch((error)=>{
-                res.status(520).json("Unknown Error, Please Try Again Later.")
-            })
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!");
+            }
 
-            // Send Code to User Email
-            await transporter.sendMail({
-                from: process.env.EMAIL,
-                to: email,
-                subject: 'Reset Password Code',
-                html: `<h1>Your Reset Password Code is : ${code}</h1>`
-            }).then(() => {
-                res.json('OK, Email has been sent.');
-            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+            try {
+                // Add OTP Code to otp Table
+                const userId = Number(user?.id);
+                const code = getRandomInt();
+                const result =await prisma.otp.create({
+                    data:{
+                        userId,
+                        code,
+                    },
+                });
+
+                // Send Code to User Email
+                await transporter.sendMail({
+                    from: process.env.EMAIL,
+                    to: email,
+                    subject: 'Reset Password Code',
+                    html: `<h1>Your Reset Password Code is : ${code}</h1>`
+                });
+
+            return res.json(result);
+
+            } catch (error) {
+                return res.status(520).json("Unknown Error, Please Try Again Later.");
+            }
+
 
         }).catch((user)=>{
-            if(user === null){
-                return res.status(520).json("This User is Not Exist!")
+            if(email != user.email){
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
@@ -223,6 +229,11 @@ export class AdminUserController {
             where: { email : email }
         })
         .then(async(user)=>{
+
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!");
+            }
+
             const latestOtp = await prisma.otp.findFirst({
                 where: { userId : user?.id },
                 orderBy: {
@@ -241,29 +252,34 @@ export class AdminUserController {
                     await prisma.otp.deleteMany({
                         where: { userId: user?.id }
                     })
-                    return res.json("Your Password is Changed!")
+                    return res.status(200).json("Your Password is Changed!");
                 })
 
             }else{
-                return res.status(520).json("This Code is Invalid or expired!")
+                return res.status(408).json("This Code is Invalid or expired!");
             }
         })
 
         }).catch((user)=>{
-            if(user === null){
-                return res.status(520).json("This User is Not Exist!")
+            if(email != user.email){
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 
-    }
+    };
 
     static async login (req : Request , res : Response ) {
         const { email , password } = req.body;
         const SecretKey = process.env.SECRET_KEY as string;
+
         // Find User
         const user = await prisma.user.findUnique({
-            where: { email : email , is_active: true}
+            where: { email : email }
         }).then(async (user)=>{
+
+            if (user?.is_active == false){
+                return res.json("Your Account is Deactive!");
+            }
 
             const userPassword : any = user?.password;
             const match = await bcrypt.compare(password , userPassword );
@@ -272,12 +288,12 @@ export class AdminUserController {
                 const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
                 res.json({ token })
             }else{
-                res.json("Username Or Password is Incorrect!")
+                res.status(401).json("Username Or Password is Incorrect!");
             }
 
         }).catch((user)=>{
-            if(user === null){
-                return res.status(520).json("This User is Not Exist!")
+            if(email != user.email){
+                return res.status(404).json("This User is Not Exist!");
             }
         })
 

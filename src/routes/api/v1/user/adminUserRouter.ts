@@ -6,21 +6,19 @@ import { authMiddleware , adminMiddleware } from "@middleware/auth";
 
 const router = Router();
 
-router.use( authMiddleware , adminMiddleware );
-
 // Admin User Router
-router.get('/', AdminUserController.allUser);
-router.get('/:id', paramSchema , validateRequestSchema , AdminUserController.singleUser);
-router.post('/register', userSchema , validateRequestSchema , AdminUserController.register);
+router.get('/', authMiddleware , adminMiddleware , AdminUserController.allUser);
+router.get('/:id', authMiddleware , adminMiddleware , paramSchema , validateRequestSchema , AdminUserController.singleUser);
+router.post('/register', authMiddleware , adminMiddleware , userSchema , validateRequestSchema , AdminUserController.register);
 // router.post('/resend', userSchema , validateRequestSchema , AdminUserController.resend);
 // router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.verify);
 
-// router.post('/forget-password', userSchema , validateRequestSchema , AdminUserController.forgetPassword);
-// router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.newPassword);
+router.post('/forget-password', userSchema , validateRequestSchema , AdminUserController.forgetPassword);
+router.put('/new-password', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.newPassword);
 
-router.delete('/delete/:id', paramSchema , validateRequestSchema , AdminUserController.delete);
+router.delete('/delete/:id', authMiddleware , adminMiddleware , paramSchema , validateRequestSchema , AdminUserController.delete);
 router.post('/login', userSchema , validateRequestSchema , AdminUserController.login);
-router.put('/change-password/:id', paramSchema , passwordSchema , validateRequestSchema , AdminUserController.changePassword);
-router.put('/update/:id', updateSchema , paramSchema , validateRequestSchema , AdminUserController.update);
+router.put('/change-password/:id', authMiddleware , adminMiddleware , paramSchema , passwordSchema , validateRequestSchema , AdminUserController.changePassword);
+router.put('/update/:id', authMiddleware , adminMiddleware , updateSchema , paramSchema , validateRequestSchema , AdminUserController.update);
 
 export default router;

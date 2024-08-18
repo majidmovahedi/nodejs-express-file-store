@@ -162,99 +162,6 @@ export class UserController {
 
     };
 
-    // static async forgetPassword (req : Request , res : Response ) {
-    //     const { email } = req.body;
-
-    //     // Find User
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email }
-    //     }).then(async (user)=>{
-
-    //         if (user?.is_active == false){
-    //             return res.json("Your Account is Deactive!");
-    //         }
-
-    //         try {
-    //             // Add OTP Code to otp Table
-    //             const userId = Number(user?.id);
-    //             const code = getRandomInt();
-    //             const result =await prisma.otp.create({
-    //                 data:{
-    //                     userId,
-    //                     code,
-    //                 },
-    //             });
-
-    //             // Send Code to User Email
-    //             await transporter.sendMail({
-    //                 from: process.env.EMAIL,
-    //                 to: email,
-    //                 subject: 'Reset Password Code',
-    //                 html: `<h1>Your Reset Password Code is : ${code}</h1>`
-    //             });
-
-    //         return res.json(result);
-
-    //         } catch (error) {
-    //             return res.status(520).json("Unknown Error, Please Try Again Later.");
-    //         }
-
-
-    //     }).catch((user)=>{
-    //         if(email != user.email){
-    //             return res.status(404).json("This User is Not Exist!");
-    //         }
-    //     })
-
-    // };
-
-    // static async newPassword (req : Request , res : Response ) {
-    //     const { email, code } = req.body;
-    //     const password = await bcrypt.hash(req.body.password, 10);
-
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email }
-    //     })
-    //     .then(async(user)=>{
-
-    //         if (user?.is_active == false){
-    //             return res.json("Your Account is Deactive!");
-    //         }
-
-    //         const latestOtp = await prisma.otp.findFirst({
-    //             where: { userId : user?.id },
-    //             orderBy: {
-    //                 id: 'desc',
-    //             },
-    //             take: 1,
-    //     })
-    //     .then(async (latestOtp)=>{
-    //         if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
-
-    //             await prisma.user.update({
-    //                 where: { email: email },
-    //                 data: { password: password },
-    //             })
-    //             .then(async ()=>{
-    //                 await prisma.otp.deleteMany({
-    //                     where: { userId: user?.id }
-    //                 })
-    //                 return res.status(200).json("Your Password is Changed!");
-    //             })
-
-    //         }else{
-    //             return res.status(408).json("This Code is Invalid or expired!");
-    //         }
-    //     })
-
-    //     }).catch((user)=>{
-    //         if(email != user.email){
-    //             return res.status(404).json("This User is Not Exist!");
-    //         }
-    //     })
-
-    // };
-
     static async delete (req : Request , res : Response ) {
         //  @ts-ignore
         const userId = req.user.id;
@@ -292,36 +199,6 @@ export class UserController {
 
     };
 
-    // static async login (req : Request , res : Response ) {
-    //     const { email , password } = req.body;
-    //     const SecretKey = process.env.SECRET_KEY as string;
-
-    //     // Find User
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email }
-    //     }).then(async (user)=>{
-
-    //         if (user?.is_active == false){
-    //             return res.json("Your Account is Deactive!");
-    //         }
-
-    //         const userPassword : any = user?.password;
-    //         const match = await bcrypt.compare(password , userPassword );
-
-    //         if(match) {
-    //             const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
-    //             res.json({ token })
-    //         }else{
-    //             res.status(401).json("Username Or Password is Incorrect!");
-    //         }
-
-    //     }).catch((user)=>{
-    //         if(email != user.email){
-    //             return res.status(404).json("This User is Not Exist!");
-    //         }
-    //     })
-
-    // };
 
     static async changePassword (req : Request , res : Response ) {
         //  @ts-ignore
