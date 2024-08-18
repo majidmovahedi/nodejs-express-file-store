@@ -20,13 +20,13 @@ export class AdminUserController {
         const user = await prisma.user.findUnique({
             where: { id : parseInt(id) }
         }).then((user)=>{
-            if(user === null){
+            if(!user){
                 return res.status(520).json("This User is Not Exist!")
-            }else{
-                return res.json(user);
             }
+            return res.json(user);
+
         }).catch((error)=>{
-            return res.status(520).json("Invalid parameter")
+            return res.status(520).json(error);
         })
 
     }
@@ -175,113 +175,113 @@ export class AdminUserController {
 
     }
 
-    // static async forgetPassword (req : Request , res : Response ) {
-    //     const { email } = req.body;
+    static async forgetPassword (req : Request , res : Response ) {
+        const { email } = req.body;
 
-    //     // Find User
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email , is_active: true }
-    //     }).then(async(user)=>{
+        // Find User
+        const user = await prisma.user.findUnique({
+            where: { email : email , is_active: true }
+        }).then(async(user)=>{
 
-    //         // Add OTP Code to otp Table
-    //         const userId = parseInt(user?.id);
-    //         const code = getRandomInt();
-    //         const result =await prisma.otp.create({
-    //             data:{
-    //                 userId,
-    //                 code,
-    //             },
-    //         }).then((result)=>{
-    //             res.status(200).json(result);
-    //         }).catch((error)=>{
-    //             res.status(520).json("Unknown Error, Please Try Again Later.")
-    //         })
+            // Add OTP Code to otp Table
+            const userId = Number(user?.id);
+            const code = getRandomInt();
+            const result =await prisma.otp.create({
+                data:{
+                    userId,
+                    code,
+                },
+            }).then((result)=>{
+                res.status(200).json(result);
+            }).catch((error)=>{
+                res.status(520).json("Unknown Error, Please Try Again Later.")
+            })
 
-    //         // Send Code to User Email
-    //         await transporter.sendMail({
-    //             from: process.env.EMAIL,
-    //             to: email,
-    //             subject: 'Reset Password Code',
-    //             html: `<h1>Your Reset Password Code is : ${code}</h1>`
-    //         }).then(() => {
-    //             res.json('OK, Email has been sent.');
-    //         }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
+            // Send Code to User Email
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Reset Password Code',
+                html: `<h1>Your Reset Password Code is : ${code}</h1>`
+            }).then(() => {
+                res.json('OK, Email has been sent.');
+            }).catch(()=>{ res.status(520).json("Unknown Error, Please Try Again Later.")})
 
-    //     }).catch((user)=>{
-    //         if(user === null){
-    //             return res.status(520).json("This User is Not Exist!")
-    //         }
-    //     })
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
 
-    // };
+    };
 
-    // static async newPassword (req : Request , res : Response ) {
-    //     const { email, code } = req.body;
-    //     const password = await bcrypt.hash(req.body.password, 10);
+    static async newPassword (req : Request , res : Response ) {
+        const { email, code } = req.body;
+        const password = await bcrypt.hash(req.body.password, 10);
 
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email }
-    //     })
-    //     .then(async(user)=>{
-    //         const latestOtp = await prisma.otp.findFirst({
-    //             where: { userId : user?.id },
-    //             orderBy: {
-    //                 id: 'desc',
-    //             },
-    //             take: 1,
-    //     })
-    //     .then(async (latestOtp)=>{
-    //         if( latestOtp?.code == code && (parseInt(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
+        const user = await prisma.user.findUnique({
+            where: { email : email }
+        })
+        .then(async(user)=>{
+            const latestOtp = await prisma.otp.findFirst({
+                where: { userId : user?.id },
+                orderBy: {
+                    id: 'desc',
+                },
+                take: 1,
+        })
+        .then(async (latestOtp)=>{
+            if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
 
-    //             await prisma.user.update({
-    //                 where: { email: email },
-    //                 data: { password: password },
-    //             })
-    //             .then(async ()=>{
-    //                 await prisma.otp.deleteMany({
-    //                     where: { userId: user?.id }
-    //                 })
-    //                 return res.json("Your Password is Changed!")
-    //             })
+                await prisma.user.update({
+                    where: { email: email },
+                    data: { password: password },
+                })
+                .then(async ()=>{
+                    await prisma.otp.deleteMany({
+                        where: { userId: user?.id }
+                    })
+                    return res.json("Your Password is Changed!")
+                })
 
-    //         }else{
-    //             return res.status(520).json("This Code is Invalid or expired!")
-    //         }
-    //     })
+            }else{
+                return res.status(520).json("This Code is Invalid or expired!")
+            }
+        })
 
-    //     }).catch((user)=>{
-    //         if(user === null){
-    //             return res.status(520).json("This User is Not Exist!")
-    //         }
-    //     })
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
 
-    // }
+    }
 
-    // static async login (req : Request , res : Response ) {
-    //     const { email , password } = req.body;
-    //     const SecretKey = process.env.SECRET_KEY as string;
-    //     // Find User
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email , is_active: true}
-    //     }).then(async (user)=>{
+    static async login (req : Request , res : Response ) {
+        const { email , password } = req.body;
+        const SecretKey = process.env.SECRET_KEY as string;
+        // Find User
+        const user = await prisma.user.findUnique({
+            where: { email : email , is_active: true}
+        }).then(async (user)=>{
 
-    //         const userPassword : any = user?.password;
-    //         const match = await bcrypt.compare(password , userPassword );
+            const userPassword : any = user?.password;
+            const match = await bcrypt.compare(password , userPassword );
 
-    //         if(match) {
-    //             const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
-    //             res.json({ token })
-    //         }else{
-    //             res.json("Username Or Password is Incorrect!")
-    //         }
+            if(match) {
+                const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
+                res.json({ token })
+            }else{
+                res.json("Username Or Password is Incorrect!")
+            }
 
-    //     }).catch((user)=>{
-    //         if(user === null){
-    //             return res.status(520).json("This User is Not Exist!")
-    //         }
-    //     })
+        }).catch((user)=>{
+            if(user === null){
+                return res.status(520).json("This User is Not Exist!")
+            }
+        })
 
-    // };
+    };
 
     static async changePassword (req : Request , res : Response ) {
         const userId = req.params.id;
