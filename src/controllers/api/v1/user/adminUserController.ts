@@ -18,7 +18,7 @@ export class AdminUserController {
     static async singleUser (req : Request , res : Response ) {
         const { id } = req.params;
         const user = await prisma.user.findUnique({
-            where: { id : Number(id) }
+            where: { id : parseInt(id) }
         }).then((user)=>{
             if(user === null){
                 return res.status(520).json("This User is Not Exist!")
@@ -67,7 +67,7 @@ export class AdminUserController {
     //     }).then(async(user)=>{
 
     //         // Add OTP Code to otp Table
-    //         const userId = Number(user?.id);
+    //         const userId = parseInt(user?.id);
     //         const code = getRandomInt();
     //         const result =await prisma.otp.create({
     //             data:{
@@ -113,7 +113,7 @@ export class AdminUserController {
     //             take: 1,
     //     })
     //     .then(async (latestOtp)=>{
-    //         if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
+    //         if( latestOtp?.code == code && (parseInt(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
 
     //             await prisma.user.update({
     //                 where: { email: email },
@@ -143,13 +143,13 @@ export class AdminUserController {
         const { id } = req.params;
 
         const user = await prisma.user.findUnique({
-            where: { id : Number(id) }
+            where: { id : parseInt(id) }
         })
         .then(async(user)=>{
 
             //Delete User's Blog
             await prisma.blog.deleteMany({
-                where: { authorId: Number(id) },
+                where: { authorId: user?.id },
             })
 
             //Delete User's Product
@@ -163,7 +163,7 @@ export class AdminUserController {
 
             //Delete User
             await prisma.user.delete({
-                    where: { id : Number(id) },
+                    where: { id : user?.id },
                 }).then(()=>{
                     res.status(200).json("User is Deleted Successfully.");
                 })
@@ -184,7 +184,7 @@ export class AdminUserController {
     //     }).then(async(user)=>{
 
     //         // Add OTP Code to otp Table
-    //         const userId = Number(user?.id);
+    //         const userId = parseInt(user?.id);
     //         const code = getRandomInt();
     //         const result =await prisma.otp.create({
     //             data:{
@@ -231,7 +231,7 @@ export class AdminUserController {
     //             take: 1,
     //     })
     //     .then(async (latestOtp)=>{
-    //         if( latestOtp?.code == code && (Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
+    //         if( latestOtp?.code == code && (parseInt(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60) > Date.now()){
 
     //             await prisma.user.update({
     //                 where: { email: email },
@@ -294,7 +294,7 @@ export class AdminUserController {
         }
 
         const user = await prisma.user.findUnique({
-            where: { id : Number(userId) }
+            where: { id : parseInt(userId) }
         }).then(async (user)=>{
 
             const newPass = await bcrypt.hash(newPassword, 10);
@@ -313,7 +313,7 @@ export class AdminUserController {
     };
 
     static async update (req : Request , res : Response ) {
-        const userId = Number(req.params.id);
+        const userId = parseInt(req.params.id);
 
         const { fullname , email , type , is_active} = req.body;
 

@@ -38,7 +38,7 @@ export class UserController {
             }).then(async (result)=>{
 
                 // Add OTP Code to otp Table
-                const userId = Number(result?.id);
+                const userId = result?.id;
                 const code = getRandomInt();
                 await prisma.otp.create({
                     data: {

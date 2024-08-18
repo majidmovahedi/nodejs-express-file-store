@@ -15,7 +15,7 @@ export class AdminBlogController {
     static async singleBlog (req : Request , res : Response ) {
         const { id } = req.params;
         const blog = await prisma.blog.findUnique({
-            where: { id : Number(id) }
+            where: { id : parseInt(id) }
         }).then((blog)=>{
             if(!blog){
                 return res.status(520).json("This Blog is Not Exist!");
@@ -68,7 +68,7 @@ export class AdminBlogController {
         const { title, content, imageurl } = req.body;
 
         const blog = await prisma.blog.update({
-            where: { id : Number(id) },
+            where: { id : parseInt(id) },
             data: {
             title,
             content,
@@ -82,9 +82,9 @@ export class AdminBlogController {
         }).catch((error)=>{
             if (error.code == "P2025"){
                 return res.status(409).json("This Id is Not Exist!")
-            }else{
-                return res.status(520).json("Unknown Error, Please Try Again Later.")
             }
+            return res.status(520).json("Unknown Error, Please Try Again Later.")
+
         })
     }
 
@@ -92,7 +92,7 @@ export class AdminBlogController {
         const { id } = req.params;
 
         const blog = await prisma.blog.delete({
-            where: { id : Number(id) },
+            where: { id : parseInt(id) },
         }).then((blog)=>{
             return res.status(200).json("Blog is Deleted Successfully.");
         }).catch((error)=>{
@@ -133,7 +133,7 @@ export class AdminBlogController {
         const { title } = req.body;
 
         const category = await prisma.blogCategory.update({
-            where: { id : Number(id) },
+            where: { id : parseInt(id) },
             data: { title },
         }).then((category)=>{
             return res.status(201).json(category);
@@ -150,7 +150,7 @@ export class AdminBlogController {
         const { id } = req.params;
 
         const category = await prisma.blogCategory.delete({
-            where: { id : Number(id) },
+            where: { id : parseInt(id) },
         }).then((category)=>{
             return res.status(200).json("Category is Deleted Successfully.");
         }).catch((error)=>{

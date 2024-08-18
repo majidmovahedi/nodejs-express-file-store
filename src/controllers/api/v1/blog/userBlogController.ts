@@ -14,7 +14,7 @@ export class UserBlogController {
     static async singleBlog (req : Request , res : Response ) {
         const { id } = req.params;
         const blog = await prisma.blog.findUnique({
-            where: { id : Number(id) }
+            where: { id : parseInt(id) }
         }).then((blog)=>{
             if(blog === null){
                 return res.status(520).json("This Blog is Not Exist!")

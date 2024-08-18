@@ -1,5 +1,9 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import validUrl from "valid-url";
+
+export const paramSchema = [
+    param('id').isInt().withMessage('ID must be an integer'),
+]
 
 export const categorySchema  = [
     body('title').notEmpty().withMessage('Category Cant be Null!'),
@@ -32,6 +36,7 @@ export const blogSchema  = [
     //     }
     //   }),
 ]
+
 
 export const userSchema  = [
     body('email').notEmpty().withMessage('Email Cant be Null!'),

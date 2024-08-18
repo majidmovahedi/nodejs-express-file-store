@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AdminBlogController } from "@controllers/api/v1/blog/adminBlogController";
-import { categorySchema , blogSchema } from "@utils/validation/validationSchema";
+import { categorySchema , blogSchema , paramSchema } from "@utils/validation/validationSchema";
 import { validateRequestSchema } from "@utils/validation/validation";
 import { authMiddleware , adminMiddleware } from "@middleware/auth";
 
@@ -11,14 +11,14 @@ router.use( authMiddleware , adminMiddleware );
 // Admin Category Router
 router.get('/category', AdminBlogController.allCategory);
 router.post('/category', categorySchema , validateRequestSchema ,AdminBlogController.createCategory);
-router.put('/category/:id', categorySchema , validateRequestSchema , AdminBlogController.updateCategory);
-router.delete('/category/:id', AdminBlogController.deleteCategory);
+router.put('/category/:id', paramSchema , categorySchema , validateRequestSchema , AdminBlogController.updateCategory);
+router.delete('/category/:id',paramSchema, AdminBlogController.deleteCategory);
 
 // Admin Blog Router
 router.get('/', AdminBlogController.allBlog);
-router.get('/:id', AdminBlogController.singleBlog);
+router.get('/:id', paramSchema , validateRequestSchema , AdminBlogController.singleBlog);
 router.post('/', blogSchema , validateRequestSchema ,AdminBlogController.createBlog);
-router.put('/:id', blogSchema , validateRequestSchema ,AdminBlogController.updateBlog);
-router.delete('/:id', AdminBlogController.deleteBlog);
+router.put('/:id', paramSchema , blogSchema , validateRequestSchema ,AdminBlogController.updateBlog);
+router.delete('/:id', paramSchema , AdminBlogController.deleteBlog);
 
 export default router;
