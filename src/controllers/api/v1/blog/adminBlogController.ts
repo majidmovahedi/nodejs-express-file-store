@@ -17,13 +17,14 @@ export class AdminBlogController {
         const blog = await prisma.blog.findUnique({
             where: { id : Number(id) }
         }).then((blog)=>{
-            if(blog === null){
-                return res.status(520).json("This Blog is Not Exist!")
-            }else{
-                return res.json(blog);
+            if(!blog){
+                return res.status(520).json("This Blog is Not Exist!");
             }
+            return res.json(blog);
+
         }).catch((error)=>{
-            return res.status(520).json("Invalid parameter")
+            return res.json(error);
+            // return res.status(520).json("Invalid parameter")
         })
 
     }
@@ -31,7 +32,9 @@ export class AdminBlogController {
     static async createBlog (req : Request , res : Response ) {
         const createdAt = new Date();
         const updatedAt = new Date();
-        const authorId = 43;
+        //  @ts-ignore
+        const authorId = req.user.id;
+
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
         const result = await prisma.blog.create({
@@ -58,7 +61,9 @@ export class AdminBlogController {
     static async updateBlog (req : Request , res : Response ) {
         const { id } = req.params;
         const updatedAt = new Date();
-        const authorId = 1;
+        //  @ts-ignore
+        const authorId = req.user.id;
+        
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
 
