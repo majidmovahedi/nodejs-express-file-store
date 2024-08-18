@@ -11,6 +11,7 @@ export const blogSchema  = [
 
     body('content').notEmpty().withMessage('Content Cant be Null!'),
     body('content').isLength({min: 20}).withMessage('Content Cant be less Than 20 Characters!'),
+    body('categoryId').notEmpty().withMessage('Category ID Cant be Null!'),
 
     body('imageurl').custom((value, { req }) => {
         if (validUrl.isUri(value)){

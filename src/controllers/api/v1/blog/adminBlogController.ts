@@ -52,9 +52,9 @@ export class AdminBlogController {
     }).catch((error)=>{
         if (error.code == "P2003"){
             return res.status(520).json("This Category is Not Exist!")
-        }else{
-            return res.status(520).json("Unknown Error, Please Try Again Later.")
         }
+        return res.status(520).json("Unknown Error, Please Try Again Later.")
+
     })
     }
 
@@ -63,7 +63,7 @@ export class AdminBlogController {
         const updatedAt = new Date();
         //  @ts-ignore
         const authorId = req.user.id;
-        
+
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
 
