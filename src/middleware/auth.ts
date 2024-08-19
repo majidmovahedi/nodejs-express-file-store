@@ -1,42 +1,50 @@
-import { Request , Response , NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const SecretKey = process.env.SECRET_KEY as string;
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-
+export function authMiddleware(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
-        if (!token) {
-            return res.status(401).json({ message: 'No token provided' });
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+
+    jwt.verify(token, SecretKey, (err, user) => {
+        if (err) {
+            return res.status(401).json({ message: 'Invalid token' });
         }
+        //  @ts-ignore
+        req.user = user;
+        // (req as any).user = user;
 
-        jwt.verify(token, SecretKey, (err, user) => {
-            if (err) {
-                return res.status(401).json({ message: 'Invalid token' });
-            }
-            //  @ts-ignore
-            req.user = user;
-            // (req as any).user = user;
-
-            next();
-        });
+        next();
+    });
 }
 
-export async function adminMiddleware(req: Request, res: Response, next: NextFunction) {
-
+export async function adminMiddleware(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
     //  @ts-ignore
     const userId = req.user.id;
 
-    const user = await prisma.user.findUnique({
-            where: { id : userId }
-        }).then(async(user)=>{
-            if (user?.type == true){
-                next()
-            }else{
-                res.status(401).json("You Dont Have Permission!")
-            }
+    const user = await prisma.user
+        .findUnique({
+            where: { id: userId },
         })
+        .then(async (user) => {
+            if (user?.type == true) {
+                next();
+            } else {
+                res.status(401).json('You Dont Have Permission!');
+            }
+        });
 }

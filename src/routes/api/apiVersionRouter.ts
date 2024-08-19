@@ -1,5 +1,5 @@
-import { Router } from "express";
-import moduleRouter from "./v1/moduleRouter";
+import { Router } from 'express';
+import moduleRouter from './v1/moduleRouter';
 
 const router = Router();
 
