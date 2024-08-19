@@ -32,7 +32,7 @@ export class AdminBlogController {
     static async createBlog(req: Request, res: Response) {
         const createdAt = new Date();
         const updatedAt = new Date();
-        //  @ts-ignore
+
         const authorId = req.user.id;
 
         const categoryId = parseInt(req.body.categoryId);
@@ -65,7 +65,7 @@ export class AdminBlogController {
     static async updateBlog(req: Request, res: Response) {
         const { id } = req.params;
         const updatedAt = new Date();
-        //  @ts-ignore
+
         const authorId = req.user.id;
 
         const categoryId = parseInt(req.body.categoryId);
