@@ -16,7 +16,7 @@
   "author": "MajidMovahedi",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^5.17.0",
+    "@prisma/client": "^5.18.0",
     "@types/bcrypt": "^5.0.2",
     "@types/nodemailer": "^6.4.15",
     "@types/valid-url": "^1.0.7",
