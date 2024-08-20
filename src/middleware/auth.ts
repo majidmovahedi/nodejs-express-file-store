@@ -21,7 +21,6 @@ export function authMiddleware(
             return res.status(401).json({ message: 'Invalid token' });
         }
 
-        // // @ts-ignore
         req.user = { id: (req.user as { id: number }).id };
         console.log(user);
 

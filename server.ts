@@ -1,7 +1,7 @@
 import "module-alias/register";
 import express from "express";
 import dotenv from "dotenv";
-import apiVersionRouter from "@routes/api/apiVersionRouter";
+import apiVersionRouter from "./src/routes/api/apiVersionRouter";
 import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
