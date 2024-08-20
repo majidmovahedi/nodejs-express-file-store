@@ -314,36 +314,6 @@ export class AdminUserController {
         }
     }
 
-    // static async login (req : Request , res : Response ) {
-    //     const { email , password } = req.body;
-    //     const SecretKey = process.env.SECRET_KEY as string;
-
-    //     // Find User
-    //     const user = await prisma.user.findUnique({
-    //         where: { email : email }
-    //     }).then(async (user)=>{
-
-    //         if (user?.is_active == false){
-    //             return res.json("Your Account is Deactive!");
-    //         }
-
-    //         const userPassword : any = user?.password;
-    //         const match = await bcrypt.compare(password , userPassword );
-
-    //         if(match) {
-    //             const token = jwt.sign({id: user?.id}, SecretKey , {expiresIn: '24h'})
-    //             res.json({ token })
-    //         }
-    //         return res.status(401).json("Username Or Password is Incorrect!");
-
-    //     }).catch((user)=>{
-    //         if(email != user.email){
-    //             return res.status(404).json("This User is Not Exist!");
-    //         }
-    //     })
-
-    // };
-
     static async changePassword(req: Request, res: Response) {
         const userId = req.params.id;
 

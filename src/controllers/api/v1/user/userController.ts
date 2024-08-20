@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 
 export class UserController {
     static async singleUser(req: Request, res: Response) {
-
         const userId = req.user.id;
         const user = await prisma.user
             .findUnique({
@@ -173,7 +172,6 @@ export class UserController {
     }
 
     static async delete(req: Request, res: Response) {
-
         const userId = req.user.id;
 
         const user = await prisma.user
@@ -246,7 +244,6 @@ export class UserController {
     }
 
     static async update(req: Request, res: Response) {
-
         const userId = req.user.id;
 
         const { fullname, email } = req.body;

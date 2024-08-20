@@ -3,6 +3,7 @@ import { AdminBlogController } from '@controllers/api/v1/blog/adminBlogControlle
 import {
     categorySchema,
     blogSchema,
+    blogUpdateSchema,
     paramSchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
@@ -46,7 +47,7 @@ router.post(
 router.put(
     '/:id',
     paramSchema,
-    blogSchema,
+    blogUpdateSchema,
     validateRequestSchema,
     AdminBlogController.updateBlog,
 );

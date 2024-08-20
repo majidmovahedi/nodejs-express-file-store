@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
@@ -23,17 +23,17 @@ export function authMiddleware(
 
         // // @ts-ignore
         req.user = { id: (req.user as { id: number }).id };
-        console.log(user)
-
-
-
+        console.log(user);
 
         next();
     });
 }
 
-export async function adminMiddleware(req: Request, res: Response, next: NextFunction) {
-
+export async function adminMiddleware(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
     const userId = req.user.id;
 
     const user = await prisma.user

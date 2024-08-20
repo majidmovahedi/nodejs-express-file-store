@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { AdminUserController } from '@controllers/api/v1/user/adminUserController';
 import {
-    userLoginSchema,
-    passwordSchema,
     paramSchema,
-    updateSchema,
-    userRegisterSchema,
-    commonSchema,
+    userLoginSchema,
+    changePasswordSchema,
+    adminUserUpdateSchema,
+    adminUserRegisterSchema,
+    userForgetPasswordSchema,
+    newPasswordSchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
@@ -27,22 +28,20 @@ router.post(
     '/register',
     authMiddleware,
     adminMiddleware,
+    adminUserRegisterSchema,
     validateRequestSchema,
     AdminUserController.register,
 );
-// router.post('/resend', userSchema , validateRequestSchema , AdminUserController.resend);
-// router.post('/verify', userSchema , userVerifySchema , validateRequestSchema , AdminUserController.verify);
 
 router.post(
     '/forget-password',
-    commonSchema,
+    userForgetPasswordSchema,
     validateRequestSchema,
     AdminUserController.forgetPassword,
 );
 router.put(
     '/new-password',
-    commonSchema,
-    passwordSchema,
+    newPasswordSchema,
     validateRequestSchema,
     AdminUserController.newPassword,
 );
@@ -66,7 +65,7 @@ router.put(
     authMiddleware,
     adminMiddleware,
     paramSchema,
-    passwordSchema,
+    changePasswordSchema,
     validateRequestSchema,
     AdminUserController.changePassword,
 );
@@ -74,8 +73,8 @@ router.put(
     '/update/:id',
     authMiddleware,
     adminMiddleware,
-    updateSchema,
     paramSchema,
+    adminUserUpdateSchema,
     validateRequestSchema,
     AdminUserController.update,
 );

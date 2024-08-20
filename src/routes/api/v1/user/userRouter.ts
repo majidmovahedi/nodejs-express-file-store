@@ -2,11 +2,14 @@ import { Router } from 'express';
 import { UserController } from '@controllers/api/v1/user/userController';
 import { AdminUserController } from '@controllers/api/v1/user/adminUserController';
 import {
-    userLoginSchema,
-    commonSchema,
-    passwordSchema,
-    updateSchema,
     userRegisterSchema,
+    userResendSchema,
+    userVerifySchema,
+    userForgetPasswordSchema,
+    newPasswordSchema,
+    userLoginSchema,
+    changePasswordSchema,
+    userUpdateSchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware } from '@middleware/auth';
@@ -23,26 +26,25 @@ router.post(
 );
 router.post(
     '/resend',
-    commonSchema,
+    userResendSchema,
     validateRequestSchema,
     UserController.resend,
 );
 router.post(
     '/verify',
-    commonSchema,
+    userVerifySchema,
     validateRequestSchema,
     UserController.verify,
 );
 router.post(
     '/forget-password',
-    commonSchema,
+    userForgetPasswordSchema,
     validateRequestSchema,
     AdminUserController.forgetPassword,
 );
 router.put(
     '/new-password',
-    commonSchema,
-    passwordSchema,
+    newPasswordSchema,
     validateRequestSchema,
     AdminUserController.newPassword,
 );
@@ -55,14 +57,14 @@ router.post(
 );
 router.put(
     '/change-password',
-    passwordSchema,
+    changePasswordSchema,
     validateRequestSchema,
     authMiddleware,
     UserController.changePassword,
 );
 router.put(
     '/update',
-    updateSchema,
+    userUpdateSchema,
     validateRequestSchema,
     authMiddleware,
     UserController.update,
