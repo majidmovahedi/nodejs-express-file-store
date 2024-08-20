@@ -246,7 +246,7 @@ export class UserController {
     static async update(req: Request, res: Response) {
         const userId = req.user.id;
 
-        const { fullname, email } = req.body;
+        const { fullname } = req.body;
 
         const user = await prisma.user
             .findUnique({
@@ -258,18 +258,17 @@ export class UserController {
                         where: { id: user?.id },
                         data: {
                             fullname,
-                            email,
                         },
                     })
                     .then((update) => {
                         return res.status(200).json(update);
                     })
                     .catch((error) => {
-                        if (error.code == 'P2002') {
-                            return res
-                                .status(409)
-                                .json('This Email is Already Taken!');
-                        }
+                        // if (error.code == 'P2002') {
+                        //     return res
+                        //         .status(409)
+                        //         .json('This Email is Already Taken!');
+                        // }
                         return res.json(error);
                     });
             });
