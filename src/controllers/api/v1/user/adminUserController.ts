@@ -77,36 +77,43 @@ export class AdminUserController {
     static async delete(req: Request, res: Response) {
         const { id } = req.params;
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: parseInt(id) },
-            })
-            .then(async (user) => {
-                //Delete User's Blog
-                await prisma.blog.deleteMany({
-                    where: { authorId: user?.id },
-                });
-
-                //Delete User's Product
-                ////////
-
-                //Delete Otp
-                await prisma.otp.deleteMany({
-                    where: { userId: user?.id },
-                });
-
-                //Delete User
-                await prisma.user
-                    .delete({
-                        where: { id: user?.id },
-                    })
-                    .then(() => {
-                        res.status(200).json('User is Deleted Successfully.');
-                    });
-            })
-            .catch((error) => {
-                return res.status(409).json('This User is Not Exist!');
             });
+
+            if (!user) {
+                return res.status(404).json('This User does not exist!');
+            }
+
+            // Delete User's Blog
+            await prisma.blog.deleteMany({
+                where: { authorId: user.id },
+            });
+
+            // Delete User's Products
+            // Uncomment and implement as needed
+            // await prisma.product.deleteMany({
+            //     where: { authorId: user.id },
+            // });
+
+            // Delete Otp
+            await prisma.otp.deleteMany({
+                where: { userId: user.id },
+            });
+
+            // Delete User
+            await prisma.user.delete({
+                where: { id: user.id },
+            });
+
+            return res.status(200).json('User is deleted successfully.');
+
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            return res.status(500).json('An error occurred while deleting the user.');
+        }
     }
 
     static async forgetPassword(req: Request, res: Response) {
