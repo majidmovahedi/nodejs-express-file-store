@@ -119,47 +119,44 @@ export class AdminUserController {
     static async forgetPassword(req: Request, res: Response) {
         const { email } = req.body;
 
-        // Find User
-        const user = await prisma.user
-            .findUnique({
-                where: { email: email },
-            })
-            .then(async (user) => {
-                if (user?.is_active == false) {
-                    return res.json('Your Account is Deactive!');
-                }
-
-                try {
-                    // Add OTP Code to otp Table
-                    const userId = Number(user?.id);
-                    const code = getRandomInt();
-                    const result = await prisma.otp.create({
-                        data: {
-                            userId,
-                            code,
-                        },
-                    });
-
-                    // Send Code to User Email
-                    await transporter.sendMail({
-                        from: process.env.EMAIL,
-                        to: email,
-                        subject: 'Reset Password Code',
-                        html: `<h1>Your Reset Password Code is : ${code}</h1>`,
-                    });
-
-                    return res.json(result);
-                } catch (error) {
-                    return res
-                        .status(520)
-                        .json('Unknown Error, Please Try Again Later.');
-                }
-            })
-            .catch((user) => {
-                if (email != user.email) {
-                    return res.status(404).json('This User is Not Exist!');
-                }
+        try {
+            // Find User
+            const user = await prisma.user.findUnique({
+                where: { email },
             });
+
+            if (!user) {
+                return res.status(404).json('This User does not exist!');
+            }
+
+            if (!user.is_active) {
+                return res.json('Your account is deactive!');
+            }
+
+            // Generate OTP Code and Save to OTP Table
+            const userId = Number(user.id);
+            const code = getRandomInt();
+            const otpResult = await prisma.otp.create({
+                data: {
+                    userId,
+                    code,
+                },
+            });
+
+            // Send OTP Code to User's Email
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Reset Password Code',
+                html: `<h1>Your Reset Password Code is: ${code}</h1>`,
+            });
+
+            return res.json(otpResult);
+
+        } catch (error) {
+            console.error('Error processing password reset request:', error);
+            return res.status(520).json('Unknown error, please try again later.');
+        }
     }
 
     static async newPassword(req: Request, res: Response) {
