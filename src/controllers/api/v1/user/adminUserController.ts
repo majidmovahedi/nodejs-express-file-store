@@ -163,55 +163,53 @@ export class AdminUserController {
         const { email, code } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
-        const user = await prisma.user
-            .findUnique({
-                where: { email: email },
-            })
-            .then(async (user) => {
-                if (user?.is_active == false) {
-                    return res.json('Your Account is Deactive!');
-                }
-
-                const latestOtp = await prisma.otp
-                    .findFirst({
-                        where: { userId: user?.id },
-                        orderBy: {
-                            id: 'desc',
-                        },
-                        take: 1,
-                    })
-                    .then(async (latestOtp) => {
-                        if (
-                            latestOtp?.code == code &&
-                            Number(latestOtp?.expire_time.getTime()) +
-                                10 * 1000 * 60 >
-                                Date.now()
-                        ) {
-                            await prisma.user
-                                .update({
-                                    where: { email: email },
-                                    data: { password: password },
-                                })
-                                .then(async () => {
-                                    await prisma.otp.deleteMany({
-                                        where: { userId: user?.id },
-                                    });
-                                    return res
-                                        .status(200)
-                                        .json('Your Password is Changed!');
-                                });
-                        } else {
-                            return res
-                                .status(408)
-                                .json('This Code is Invalid or expired!');
-                        }
-                    });
-            })
-            .catch((user) => {
-                if (email != user.email) {
-                    return res.status(404).json('This User is Not Exist!');
-                }
+        try {
+            // Find User
+            const user = await prisma.user.findUnique({
+                where: { email },
             });
+
+            if (!user) {
+                return res.status(404).json('This User does not exist!');
+            }
+
+            if (!user.is_active) {
+                return res.json('Your account is deactive!');
+            }
+
+            // Find the latest OTP for the user
+            const latestOtp = await prisma.otp.findFirst({
+                where: { userId: user.id },
+                orderBy: { id: 'desc' },
+                take: 1,
+            });
+
+            if (
+                latestOtp?.code == code &&
+                Number(latestOtp?.expire_time.getTime()) +
+                    10 * 1000 * 60 >
+                    Date.now()
+            ) {
+                // Update user password
+                await prisma.user.update({
+                    where: { email },
+                    data: { password },
+                });
+
+                // Delete all OTPs for the user
+                await prisma.otp.deleteMany({
+                    where: { userId: user.id },
+                });
+
+                return res.status(200).json('Your password has been changed!');
+            } else {
+                return res.status(408).json('This code is invalid or expired!');
+            }
+
+        } catch (error) {
+            console.error('Error processing password reset:', error);
+            return res.status(520).json('Unknown error, please try again later.');
+        }
     }
 
     static async login(req: Request, res: Response) {
