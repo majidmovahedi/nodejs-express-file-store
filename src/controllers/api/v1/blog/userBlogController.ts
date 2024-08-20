@@ -7,7 +7,7 @@ export class UserBlogController {
     // User Blog Read
     static async allBlog(req: Request, res: Response) {
         const blogs = await prisma.blog.findMany();
-        res.json(blogs);
+        return res.json(blogs);
     }
 
     static async singleBlog(req: Request, res: Response) {
@@ -31,6 +31,6 @@ export class UserBlogController {
     // User Category Read
     static async allCategory(req: Request, res: Response) {
         const categories = await prisma.blogCategory.findMany();
-        res.json(categories);
+        return res.json(categories);
     }
 }

@@ -20,9 +20,11 @@ export function authMiddleware(
         if (err) {
             return res.status(401).json({ message: 'Invalid token' });
         }
+        
+        // @ts-ignore
+        req.user = user;
 
-        req.user = { id: (req.user as { id: number }).id };
-        console.log(user);
+        // req.user = { id: (req.user as { id: number }).id };
 
         next();
     });

@@ -6,37 +6,45 @@ import { getRandomInt } from '@utils/auth/codeGenerator';
 import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
+interface CustomError extends Error {
+    code?: string;
+}
+
 export class AdminUserController {
     // User CRUD
 
     static async allUser(req: Request, res: Response) {
         const Users = await prisma.user.findMany();
-        res.json(Users);
+        return res.json(Users);
     }
 
     static async singleUser(req: Request, res: Response) {
         const { id } = req.params;
-        const user = await prisma.user
-            .findUnique({
-                where: { id: parseInt(id) },
-            })
-            .then((user) => {
+
+        try {
+            const user = await prisma.user
+                .findUnique({
+                    where: { id: parseInt(id) },
+                });
+
                 if (!user) {
                     return res.status(520).json('This User is Not Exist!');
                 }
                 return res.json(user);
-            })
-            .catch((error) => {
+
+            } catch (error) {
+                console.error('Error during get single user :', error);
                 return res.status(520).json(error);
-            });
+            }
+
     }
 
     static async register(req: Request, res: Response) {
-        // const type = Boolean(req.body.type);
         const password = await bcrypt.hash(req.body.password, 10);
         const { fullname, email, is_active, type } = req.body;
 
-        const result = await prisma.user
+        try {
+            const result = await prisma.user
             .create({
                 data: {
                     fullname,
@@ -45,20 +53,26 @@ export class AdminUserController {
                     type,
                     is_active,
                 },
-            })
-            .then(async (result) => {
-                return res.status(201).json(result);
-            })
-            .catch((error) => {
-                if (error.code == 'P2002') {
-                    return res.status(409).json('This User is Already Exist!');
-                } else {
-                    return res
-                        .status(520)
-                        .json('Unknown Error, Please Try Again Later.');
-                }
             });
+            return res.status(201).json(result);
+
+        } catch (error) {
+            const prismaError = error as CustomError;
+
+            if (prismaError.code === 'P2002') {
+                return res.status(409).json({
+                    message: 'This user already exists!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
     }
+}
 
     static async delete(req: Request, res: Response) {
         const { id } = req.params;
