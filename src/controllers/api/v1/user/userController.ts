@@ -175,36 +175,40 @@ export class UserController {
     static async delete(req: Request, res: Response) {
         const userId = req.user.id;
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: userId },
-            })
-            .then(async (user) => {
-                //Delete User's Blog
-                await prisma.blog.deleteMany({
-                    where: { authorId: user?.id },
-                });
-
-                //Delete User's Product
-                ////////
-
-                //Delete Otp
-                await prisma.otp.deleteMany({
-                    where: { userId: user?.id },
-                });
-
-                //Delete User
-                await prisma.user
-                    .delete({
-                        where: { id: user?.id },
-                    })
-                    .then(() => {
-                        res.status(200).json('User is Deleted Successfully.');
-                    });
-            })
-            .catch((error) => {
-                return res.json(error);
             });
+
+            // Delete User's Blog
+            await prisma.blog.deleteMany({
+                where: { authorId: user?.id },
+            });
+
+            // Delete User's Products
+            // Uncomment and implement as needed
+            // await prisma.product.deleteMany({
+            //     where: { authorId: user?.id },
+            // });
+
+            // Delete Otp
+            await prisma.otp.deleteMany({
+                where: { userId: user?.id },
+            });
+
+            // Delete User
+            await prisma.user.delete({
+                where: { id: user?.id },
+            });
+
+            return res.status(200).json('User is deleted successfully.');
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            return res
+                .status(500)
+                .json('An error occurred while deleting the user.');
+        }
     }
 
     static async changePassword(req: Request, res: Response) {
