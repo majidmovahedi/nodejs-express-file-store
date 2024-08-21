@@ -3,7 +3,7 @@ import { AdminUserController } from '@controllers/api/v1/user/adminUserControlle
 import {
     paramSchema,
     userLoginSchema,
-    changePasswordSchema,
+    adminChangePasswordSchema,
     adminUserUpdateSchema,
     adminUserRegisterSchema,
     userForgetPasswordSchema,
@@ -65,7 +65,7 @@ router.put(
     authMiddleware,
     adminMiddleware,
     paramSchema,
-    changePasswordSchema,
+    adminChangePasswordSchema,
     validateRequestSchema,
     AdminUserController.changePassword,
 );

@@ -8,7 +8,7 @@ import {
     userForgetPasswordSchema,
     newPasswordSchema,
     userLoginSchema,
-    changePasswordSchema,
+    userChangePasswordSchema,
     userUpdateSchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
@@ -57,7 +57,7 @@ router.post(
 );
 router.put(
     '/change-password',
-    changePasswordSchema,
+    userChangePasswordSchema,
     validateRequestSchema,
     authMiddleware,
     UserController.changePassword,

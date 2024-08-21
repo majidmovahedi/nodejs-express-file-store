@@ -94,8 +94,14 @@ export const newPasswordSchema = [
     body('password').notEmpty().withMessage('Please Enter Password'),
 ];
 
-export const changePasswordSchema = [
+export const userChangePasswordSchema = [
     body('password').notEmpty().withMessage('password Cant be Null!'),
+    body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
+    body('repeatNewPassword')
+        .notEmpty()
+        .withMessage('repeat new password Cant be Null!'),
+];
+export const adminChangePasswordSchema = [
     body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
     body('repeatNewPassword')
         .notEmpty()

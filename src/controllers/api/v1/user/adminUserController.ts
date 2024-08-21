@@ -22,21 +22,18 @@ export class AdminUserController {
         const { id } = req.params;
 
         try {
-            const user = await prisma.user
-                .findUnique({
-                    where: { id: parseInt(id) },
-                });
+            const user = await prisma.user.findUnique({
+                where: { id: parseInt(id) },
+            });
 
-                if (!user) {
-                    return res.status(520).json('This User is Not Exist!');
-                }
-                return res.json(user);
-
-            } catch (error) {
-                console.error('Error during get single user :', error);
-                return res.status(520).json(error);
+            if (!user) {
+                return res.status(520).json('This User is Not Exist!');
             }
-
+            return res.json(user);
+        } catch (error) {
+            console.error('Error during get single user :', error);
+            return res.status(520).json(error);
+        }
     }
 
     static async register(req: Request, res: Response) {
@@ -44,8 +41,7 @@ export class AdminUserController {
         const { fullname, email, is_active, type } = req.body;
 
         try {
-            const result = await prisma.user
-            .create({
+            const result = await prisma.user.create({
                 data: {
                     fullname,
                     email,
@@ -55,7 +51,6 @@ export class AdminUserController {
                 },
             });
             return res.status(201).json(result);
-
         } catch (error) {
             const prismaError = error as CustomError;
 
@@ -71,8 +66,8 @@ export class AdminUserController {
                     details: prismaError.message,
                 });
             }
+        }
     }
-}
 
     static async delete(req: Request, res: Response) {
         const { id } = req.params;
@@ -109,10 +104,11 @@ export class AdminUserController {
             });
 
             return res.status(200).json('User is deleted successfully.');
-
         } catch (error) {
             console.error('Error deleting user:', error);
-            return res.status(500).json('An error occurred while deleting the user.');
+            return res
+                .status(500)
+                .json('An error occurred while deleting the user.');
         }
     }
 
@@ -152,10 +148,11 @@ export class AdminUserController {
             });
 
             return res.json(otpResult);
-
         } catch (error) {
             console.error('Error processing password reset request:', error);
-            return res.status(520).json('Unknown error, please try again later.');
+            return res
+                .status(520)
+                .json('Unknown error, please try again later.');
         }
     }
 
@@ -186,8 +183,7 @@ export class AdminUserController {
 
             if (
                 latestOtp?.code == code &&
-                Number(latestOtp?.expire_time.getTime()) +
-                    10 * 1000 * 60 >
+                Number(latestOtp?.expire_time.getTime()) + 10 * 1000 * 60 >
                     Date.now()
             ) {
                 // Update user password
@@ -205,10 +201,11 @@ export class AdminUserController {
             } else {
                 return res.status(408).json('This code is invalid or expired!');
             }
-
         } catch (error) {
             console.error('Error processing password reset:', error);
-            return res.status(520).json('Unknown error, please try again later.');
+            return res
+                .status(520)
+                .json('Unknown error, please try again later.');
         }
     }
 
@@ -243,7 +240,6 @@ export class AdminUserController {
             }
             return res.status(401).json('Username or password is incorrect!');
         } catch (error) {
-            // Log the error and send a generic error response
             console.error('Error during login:', error);
             return res.status(500).json('An unexpected error occurred.');
         }
@@ -251,32 +247,38 @@ export class AdminUserController {
 
     static async changePassword(req: Request, res: Response) {
         const userId = req.params.id;
-
         const { newPassword, repeatNewPassword } = req.body;
 
         if (newPassword != repeatNewPassword) {
             return res.json('New Password Does Not Match');
         }
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: parseInt(userId) },
-            })
-            .then(async (user) => {
-                const newPass = await bcrypt.hash(newPassword, 10);
-
-                await prisma.user
-                    .update({
-                        where: { id: user?.id },
-                        data: { password: newPass },
-                    })
-                    .then(() => {
-                        return res.status(200).json('Password changed');
-                    })
-                    .catch((error) => {
-                        return res.json(error);
-                    });
             });
+
+            if (!user) {
+                return res.status(404).json('User not found');
+            }
+
+            // Hash the new password
+            const newPass = await bcrypt.hash(newPassword, 10);
+
+            // Update the user's password
+            await prisma.user.update({
+                where: { id: user.id },
+                data: { password: newPass },
+            });
+
+            return res.status(200).json('Password changed');
+        } catch (error) {
+            console.error('Error during change password:', error);
+            return res
+                .status(500)
+                .json('An error occurred while changing the password');
+        }
     }
 
     static async update(req: Request, res: Response) {
@@ -284,32 +286,43 @@ export class AdminUserController {
 
         const { fullname, email, type, is_active } = req.body;
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: userId },
-            })
-            .then(async (user) => {
-                const update = await prisma.user
-                    .update({
-                        where: { id: user?.id },
-                        data: {
-                            fullname,
-                            email,
-                            type,
-                            is_active,
-                        },
-                    })
-                    .then((update) => {
-                        return res.status(200).json(update);
-                    })
-                    .catch((error) => {
-                        if (error.code == 'P2002') {
-                            return res
-                                .status(409)
-                                .json('This Email is Already Taken!');
-                        }
-                        return res.json(error);
-                    });
             });
+
+            if (!user) {
+                return res.status(404).json('User not found');
+            }
+
+            // Update the user information
+            const updatedUser = await prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    fullname,
+                    email,
+                    type,
+                    is_active,
+                },
+            });
+
+            return res.status(200).json(updatedUser);
+        } catch (error) {
+            const prismaError = error as CustomError;
+
+            if (prismaError.code === 'P2002') {
+                return res.status(409).json({
+                    message: 'This Email is already taken!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
     }
 }
