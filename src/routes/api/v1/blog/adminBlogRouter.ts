@@ -9,48 +9,50 @@ import {
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
 
+const adminBlogController = new AdminBlogController();
+
 const router = Router();
 
 router.use(authMiddleware, adminMiddleware);
 
 // Admin Category Router
-router.get('/category', AdminBlogController.allCategory);
+router.get('/category', adminBlogController.allCategory);
 router.post(
     '/category',
     categorySchema,
     validateRequestSchema,
-    AdminBlogController.createCategory,
+    adminBlogController.createCategory,
 );
 router.put(
     '/category/:id',
     paramSchema,
     categorySchema,
     validateRequestSchema,
-    AdminBlogController.updateCategory,
+    adminBlogController.updateCategory,
 );
-router.delete('/category/:id', paramSchema, AdminBlogController.deleteCategory);
+router.delete('/category/:id', paramSchema, adminBlogController.deleteCategory);
 
 // Admin Blog Router
-router.get('/', AdminBlogController.allBlog);
+router.get('/', adminBlogController.allBlog);
 router.get(
     '/:id',
     paramSchema,
     validateRequestSchema,
-    AdminBlogController.singleBlog,
+    adminBlogController.singleBlog,
 );
 router.post(
     '/',
     blogSchema,
     validateRequestSchema,
-    AdminBlogController.createBlog,
+    adminBlogController.createBlog,
 );
 router.put(
     '/:id',
     paramSchema,
     blogUpdateSchema,
     validateRequestSchema,
-    AdminBlogController.updateBlog,
+    adminBlogController.updateBlog,
 );
-router.delete('/:id', paramSchema, AdminBlogController.deleteBlog);
+router.delete('/:id', paramSchema, adminBlogController.deleteBlog);
 
 export default router;

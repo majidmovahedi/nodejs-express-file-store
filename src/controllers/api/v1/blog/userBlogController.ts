@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 
 export class UserBlogController {
     // User Blog Read
-    static async allBlog(req: Request, res: Response) {
+    async allBlog(req: Request, res: Response) {
         const blogs = await prisma.blog.findMany();
         return res.json(blogs);
     }
 
-    static async singleBlog(req: Request, res: Response) {
+    async singleBlog(req: Request, res: Response) {
         const { id } = req.params;
         const blog = await prisma.blog
             .findUnique({
@@ -29,7 +29,7 @@ export class UserBlogController {
     }
 
     // User Category Read
-    static async allCategory(req: Request, res: Response) {
+    async allCategory(req: Request, res: Response) {
         const categories = await prisma.blogCategory.findMany();
         return res.json(categories);
     }

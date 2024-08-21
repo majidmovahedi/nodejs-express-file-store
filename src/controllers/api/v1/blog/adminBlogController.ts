@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 export class AdminBlogController {
     // Admin Blog CRUD
 
-    static async allBlog(req: Request, res: Response) {
+    async allBlog(req: Request, res: Response) {
         const blogs = await prisma.blog.findMany();
         res.json(blogs);
     }
 
-    static async singleBlog(req: Request, res: Response) {
+    async singleBlog(req: Request, res: Response) {
         const { id } = req.params;
         const blog = await prisma.blog
             .findUnique({
@@ -29,7 +29,7 @@ export class AdminBlogController {
             });
     }
 
-    static async createBlog(req: Request, res: Response) {
+    async createBlog(req: Request, res: Response) {
         const createdAt = new Date();
         const updatedAt = new Date();
 
@@ -62,7 +62,7 @@ export class AdminBlogController {
             });
     }
 
-    static async updateBlog(req: Request, res: Response) {
+    async updateBlog(req: Request, res: Response) {
         const { id } = req.params;
         const updatedAt = new Date();
 
@@ -96,7 +96,7 @@ export class AdminBlogController {
             });
     }
 
-    static async deleteBlog(req: Request, res: Response) {
+    async deleteBlog(req: Request, res: Response) {
         const { id } = req.params;
 
         const blog = await prisma.blog
@@ -119,12 +119,12 @@ export class AdminBlogController {
 
     // Admin Category CRUD
 
-    static async allCategory(req: Request, res: Response) {
+    async allCategory(req: Request, res: Response) {
         const categories = await prisma.blogCategory.findMany();
         res.json(categories);
     }
 
-    static async createCategory(req: Request, res: Response) {
+    async createCategory(req: Request, res: Response) {
         const { title } = req.body;
         const category = await prisma.blogCategory
             .create({
@@ -146,7 +146,7 @@ export class AdminBlogController {
             });
     }
 
-    static async updateCategory(req: Request, res: Response) {
+    async updateCategory(req: Request, res: Response) {
         const { id } = req.params;
         const { title } = req.body;
 
@@ -169,7 +169,7 @@ export class AdminBlogController {
             });
     }
 
-    static async deleteCategory(req: Request, res: Response) {
+    async deleteCategory(req: Request, res: Response) {
         const { id } = req.params;
 
         const category = await prisma.blogCategory
