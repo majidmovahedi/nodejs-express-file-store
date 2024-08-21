@@ -7,7 +7,6 @@ import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 import { CustomError } from 'types';
 
-
 export class AdminUserController {
     // User CRUD
 
@@ -27,7 +26,7 @@ export class AdminUserController {
             if (!user) {
                 return res.status(520).json('This User is Not Exist!');
             }
-            return res.json(user);
+            return res.status(200).json(user);
         } catch (error) {
             console.error('Error during get single user :', error);
             return res.status(520).json(error);

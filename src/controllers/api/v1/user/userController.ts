@@ -8,16 +8,15 @@ const prisma = new PrismaClient();
 export class UserController {
     static async singleUser(req: Request, res: Response) {
         const userId = req.user.id;
-        const user = await prisma.user
-            .findUnique({
+        try {
+            const user = await prisma.user.findUnique({
                 where: { id: userId },
-            })
-            .then((user) => {
-                return res.status(200).json(user);
             });
-        // .catch((error)=>{
-        //     return res.json(error)
-        // })
+            return res.status(200).json(user);
+        } catch (error) {
+            console.error('Error during get single user :', error);
+            return res.status(520).json(error);
+        }
     }
 
     static async register(req: Request, res: Response) {
