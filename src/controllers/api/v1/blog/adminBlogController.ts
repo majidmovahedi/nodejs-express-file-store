@@ -142,29 +142,32 @@ export class AdminBlogController {
 
     async allCategory(req: Request, res: Response) {
         const categories = await prisma.blogCategory.findMany();
-        res.json(categories);
+        return res.status(200).json(categories);
     }
 
     async createCategory(req: Request, res: Response) {
         const { title } = req.body;
-        const category = await prisma.blogCategory
-            .create({
+        try {
+            const category = await prisma.blogCategory.create({
                 data: { title },
-            })
-            .then((category) => {
-                return res.status(201).json(category);
-            })
-            .catch((error) => {
-                if (error.code == 'P2002') {
-                    return res
-                        .status(409)
-                        .json('This Category is Already Exist!');
-                } else {
-                    return res
-                        .status(520)
-                        .json('Unknown Error, Please Try Again Later.');
-                }
             });
+
+            return res.status(201).json(category);
+        } catch (error) {
+            const prismaError = error as CustomError;
+            if (prismaError.code === 'P2002') {
+                return res.status(404).json({
+                    message: 'This Category is Already Exists!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
     }
 
     async updateCategory(req: Request, res: Response) {
