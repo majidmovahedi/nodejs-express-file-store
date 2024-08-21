@@ -261,32 +261,24 @@ export class UserController {
     static async update(req: Request, res: Response) {
         //@ts-ignore
         const userId = req.user.id;
-
         const { fullname } = req.body;
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: userId },
-            })
-            .then(async (user) => {
-                const update = await prisma.user
-                    .update({
-                        where: { id: user?.id },
-                        data: {
-                            fullname,
-                        },
-                    })
-                    .then((update) => {
-                        return res.status(200).json(update);
-                    })
-                    .catch((error) => {
-                        // if (error.code == 'P2002') {
-                        //     return res
-                        //         .status(409)
-                        //         .json('This Email is Already Taken!');
-                        // }
-                        return res.json(error);
-                    });
             });
+
+            const updatedUser = await prisma.user.update({
+                where: { id: userId },
+                data: { fullname },
+            });
+
+            return res.status(200).json(updatedUser);
+
+        } catch (error) {
+            console.error('Error updating user:', error);
+            return res.status(500).json('An error occurred while updating the user');
+        }
     }
 }

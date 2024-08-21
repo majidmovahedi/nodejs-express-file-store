@@ -143,6 +143,4 @@ export const userUpdateSchema = [
         .optional()
         .notEmpty()
         .withMessage('FullName Cant be Null!'),
-    body('email').optional().notEmpty().withMessage('Email Cant be Null!'),
-    body('email').optional().isEmail().withMessage('Please Enter Valid Email!'),
 ];
