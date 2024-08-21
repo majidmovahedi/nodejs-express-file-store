@@ -21,7 +21,6 @@ export class UserBlogController {
                 return res.status(520).json('This Blog is Not Exist!');
             }
             return res.status(200).json(blog);
-
         } catch (error) {
             console.error('Error during get single blog:', error);
             return res.status(500).json('An unexpected error occurred.');

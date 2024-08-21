@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { CustomError } from 'types';
 
 const prisma = new PrismaClient();
 
@@ -23,7 +24,6 @@ export class AdminBlogController {
                 return res.status(520).json('This Blog is Not Exist!');
             }
             return res.status(200).json(blog);
-
         } catch (error) {
             console.error('Error during get single blog:', error);
             return res.status(500).json('An unexpected error occurred.');
@@ -33,13 +33,12 @@ export class AdminBlogController {
     async createBlog(req: Request, res: Response) {
         const createdAt = new Date();
         const updatedAt = new Date();
-
         const authorId = Number(req.user?.id);
-
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
-        const result = await prisma.blog
-            .create({
+
+        try {
+            const result = await prisma.blog.create({
                 data: {
                     title,
                     content,
@@ -49,18 +48,25 @@ export class AdminBlogController {
                     authorId,
                     categoryId,
                 },
-            })
-            .then((result) => {
-                return res.status(201).json(result);
-            })
-            .catch((error) => {
-                if (error.code == 'P2003') {
-                    return res.status(520).json('This Category is Not Exist!');
-                }
-                return res
-                    .status(520)
-                    .json('Unknown Error, Please Try Again Later.');
             });
+
+            return res.status(201).json(result);
+        } catch (error) {
+            const prismaError = error as CustomError;
+
+            if (prismaError.code === 'P2003') {
+                return res.status(404).json({
+                    message: 'This Category does not exist!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
     }
 
     async updateBlog(req: Request, res: Response) {
