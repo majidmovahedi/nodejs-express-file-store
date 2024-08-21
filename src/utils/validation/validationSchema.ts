@@ -133,8 +133,8 @@ export const userVerifySchema = [
     body('email').notEmpty().withMessage('Email Cant be Null!'),
     body('email').isEmail().withMessage('Please Enter Valid Email!'),
     body('code')
-        .isLength({ min: 4, max: 4 })
-        .withMessage('Code Must be Four digits!'),
+        .isLength({ min: 5, max: 5 })
+        .withMessage('Code Must be Five digits!'),
     body('code').isNumeric().withMessage('Please Enter The Number Correctly!'),
 ];
 
