@@ -7,30 +7,30 @@ export class UserBlogController {
     // User Blog Read
     async allBlog(req: Request, res: Response) {
         const blogs = await prisma.blog.findMany();
-        return res.json(blogs);
+        return res.status(200).json(blogs);
     }
 
     async singleBlog(req: Request, res: Response) {
         const { id } = req.params;
-        const blog = await prisma.blog
-            .findUnique({
+        try {
+            const blog = await prisma.blog.findUnique({
                 where: { id: parseInt(id) },
-            })
-            .then((blog) => {
-                if (blog === null) {
-                    return res.status(520).json('This Blog is Not Exist!');
-                } else {
-                    return res.json(blog);
-                }
-            })
-            .catch((error) => {
-                return res.status(520).json('Invalid parameter');
             });
+
+            if (!blog) {
+                return res.status(520).json('This Blog is Not Exist!');
+            }
+            return res.status(200).json(blog);
+
+        } catch (error) {
+            console.error('Error during get single blog:', error);
+            return res.status(500).json('An unexpected error occurred.');
+        }
     }
 
     // User Category Read
     async allCategory(req: Request, res: Response) {
         const categories = await prisma.blogCategory.findMany();
-        return res.json(categories);
+        return res.status(200).json(categories);
     }
 }
