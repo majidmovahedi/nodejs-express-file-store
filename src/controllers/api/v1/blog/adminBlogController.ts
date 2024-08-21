@@ -33,8 +33,7 @@ export class AdminBlogController {
         const createdAt = new Date();
         const updatedAt = new Date();
 
-        // @ts-ignore
-        const authorId = req.user.id;
+        const authorId = Number(req.user?.id);
 
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
@@ -67,8 +66,7 @@ export class AdminBlogController {
         const { id } = req.params;
         const updatedAt = new Date();
 
-        // @ts-ignore
-        const authorId = req.user.id;
+        const authorId = Number(req.user?.id);
 
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;

@@ -9,8 +9,8 @@ const prisma = new PrismaClient();
 
 export class UserController {
     async singleUser(req: Request, res: Response) {
-        //@ts-ignore
-        const userId = req.user.id;
+
+        const userId = req.user?.id;
         try {
             const user = await prisma.user.findUnique({
                 where: { id: userId },
@@ -175,8 +175,8 @@ export class UserController {
     }
 
     async delete(req: Request, res: Response) {
-        //@ts-ignore
-        const userId = req.user.id;
+
+        const userId = req.user?.id;
 
         try {
             // Find the user by ID
@@ -215,8 +215,8 @@ export class UserController {
     }
 
     async changePassword(req: Request, res: Response) {
-        //@ts-ignore
-        const userId = req.user.id;
+
+        const userId = req.user?.id;
 
         const { password, newPassword, repeatNewPassword } = req.body;
 
@@ -260,8 +260,8 @@ export class UserController {
     }
 
     async update(req: Request, res: Response) {
-        //@ts-ignore
-        const userId = req.user.id;
+
+        const userId = req.user?.id;
         const { fullname } = req.body;
 
         try {
