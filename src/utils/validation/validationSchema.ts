@@ -101,6 +101,7 @@ export const userChangePasswordSchema = [
         .notEmpty()
         .withMessage('repeat new password Cant be Null!'),
 ];
+
 export const adminChangePasswordSchema = [
     body('newPassword').notEmpty().withMessage('new password Cant be Null!'),
     body('repeatNewPassword')

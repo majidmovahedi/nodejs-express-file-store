@@ -5,3 +5,7 @@ declare namespace Express {
         };
     }
 }
+
+export interface CustomError extends Error {
+    code?: string;
+}
