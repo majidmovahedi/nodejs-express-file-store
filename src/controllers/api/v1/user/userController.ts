@@ -4,10 +4,12 @@ import bcrypt from 'bcrypt';
 import { transporter } from '@utils/auth/sendEmails';
 import { getRandomInt } from '@utils/auth/codeGenerator';
 import { CustomError } from 'types';
+
 const prisma = new PrismaClient();
 
 export class UserController {
     static async singleUser(req: Request, res: Response) {
+        //@ts-ignore
         const userId = req.user.id;
         try {
             const user = await prisma.user.findUnique({
@@ -173,6 +175,7 @@ export class UserController {
     }
 
     static async delete(req: Request, res: Response) {
+        //@ts-ignore
         const userId = req.user.id;
 
         try {
@@ -212,6 +215,7 @@ export class UserController {
     }
 
     static async changePassword(req: Request, res: Response) {
+        //@ts-ignore
         const userId = req.user.id;
 
         const { password, newPassword, repeatNewPassword } = req.body;
@@ -220,35 +224,42 @@ export class UserController {
             return res.json('New Password Does Not Match');
         }
 
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find the user by ID
+            const user = await prisma.user.findUnique({
                 where: { id: userId },
-            })
-            .then(async (user) => {
-                const newPass = await bcrypt.hash(newPassword, 10);
-                const userPassword: any = user?.password;
-
-                const match = await bcrypt.compare(password, userPassword);
-
-                if (!match) {
-                    return res.status(401).json('Password is Incorrect');
-                }
-
-                await prisma.user
-                    .update({
-                        where: { id: user?.id },
-                        data: { password: newPass },
-                    })
-                    .then(() => {
-                        return res.status(200).json('Password changed');
-                    })
-                    .catch((error) => {
-                        return res.json(error);
-                    });
             });
+
+            if (!user) {
+                return res.status(404).json('User not found');
+            }
+
+            // Compare the current password with the stored password
+            const match = await bcrypt.compare(password, user.password);
+
+            if (!match) {
+                return res.status(401).json('Password is incorrect');
+            }
+
+            // Hash the new password
+            const newPass = await bcrypt.hash(newPassword, 10);
+
+            // Update the user's password
+            await prisma.user.update({
+                where: { id: userId },
+                data: { password: newPass },
+            });
+
+            return res.status(200).json('Password changed successfully');
+
+        } catch (error) {
+            console.error('Error changing password:', error);
+            return res.status(500).json('An error occurred while changing the password');
+        }
     }
 
     static async update(req: Request, res: Response) {
+        //@ts-ignore
         const userId = req.user.id;
 
         const { fullname } = req.body;

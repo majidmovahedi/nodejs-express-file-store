@@ -5,6 +5,7 @@ import { transporter } from '@utils/auth/sendEmails';
 import { getRandomInt } from '@utils/auth/codeGenerator';
 import jwt from 'jsonwebtoken';
 import { CustomError } from 'types';
+
 const prisma = new PrismaClient();
 
 export class AdminUserController {
