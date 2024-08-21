@@ -4,8 +4,8 @@ import bcrypt from 'bcrypt';
 import { transporter } from '@utils/auth/sendEmails';
 import { getRandomInt } from '@utils/auth/codeGenerator';
 import jwt from 'jsonwebtoken';
-const prisma = new PrismaClient();
 import { CustomError } from 'types';
+const prisma = new PrismaClient();
 
 export class AdminUserController {
     // User CRUD

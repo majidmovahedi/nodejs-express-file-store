@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { transporter } from '@utils/auth/sendEmails';
 import { getRandomInt } from '@utils/auth/codeGenerator';
+import { CustomError } from 'types';
 const prisma = new PrismaClient();
 
 export class UserController {
@@ -23,47 +24,56 @@ export class UserController {
         const { fullname, email } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
-        // Create the user
-        const result = await prisma.user
-            .create({
+        try {
+            // Create the user
+            const result = await prisma.user.create({
                 data: {
                     fullname,
                     email,
                     password,
                 },
-            })
-            .then(async (result) => {
-                // Add OTP Code to otp Table
-                const userId = result?.id;
-                const code = getRandomInt();
-                await prisma.otp.create({
-                    data: {
-                        userId,
-                        code,
-                    },
-                });
-
-                // Send Code to User Email
-                await transporter.sendMail({
-                    from: process.env.EMAIL,
-                    to: email,
-                    subject: 'Activation Code',
-                    html: `<h1>Your Activation Code is : ${code}</h1>`,
-                });
-
-                return res.status(201).json(result);
-            })
-            .catch((error) => {
-                if (error.code == 'P2002') {
-                    return res.status(409).json('This User is Already Exist!');
-                } else if (error.code == 'EMESSAGE') {
-                    return res.status(500).json('Email server error');
-                } else {
-                    return res
-                        .status(520)
-                        .json('Unknown Error, Please Try Again Later.');
-                }
             });
+
+            // Add OTP Code to otp Table
+            const userId = result.id;
+            const code = getRandomInt();
+            await prisma.otp.create({
+                data: {
+                    userId,
+                    code,
+                },
+            });
+
+            // Send Code to User Email
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Activation Code',
+                html: `<h1>Your Activation Code is : ${code}</h1>`,
+            });
+
+            return res.status(201).json(result);
+        } catch (error) {
+            const prismaError = error as CustomError;
+
+            if (prismaError.code === 'P2002') {
+                return res.status(409).json({
+                    message: 'This user already exists!',
+                    code: prismaError.code,
+                });
+            } else if (prismaError.code === 'EMESSAGE') {
+                return res.status(500).json({
+                    message: 'Email server error!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
     }
 
     static async resend(req: Request, res: Response) {
