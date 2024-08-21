@@ -21,7 +21,6 @@ export function authMiddleware(
             return res.status(401).json({ message: 'Invalid token' });
         }
 
-
         req.user = user as { id: number };
 
         next();
@@ -33,7 +32,6 @@ export async function adminMiddleware(
     res: Response,
     next: NextFunction,
 ) {
-
     const userId = req.user?.id;
 
     const user = await prisma.user
