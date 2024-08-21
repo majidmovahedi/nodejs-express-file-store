@@ -12,17 +12,19 @@ import {
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
 
+const adminUserController = new AdminUserController();
+
 const router = Router();
 
 // Admin User Router
-router.get('/', authMiddleware, adminMiddleware, AdminUserController.allUser);
+router.get('/', authMiddleware, adminMiddleware, adminUserController.allUser);
 router.get(
     '/:id',
     authMiddleware,
     adminMiddleware,
     paramSchema,
     validateRequestSchema,
-    AdminUserController.singleUser,
+    adminUserController.singleUser,
 );
 router.post(
     '/register',
@@ -30,20 +32,20 @@ router.post(
     adminMiddleware,
     adminUserRegisterSchema,
     validateRequestSchema,
-    AdminUserController.register,
+    adminUserController.register,
 );
 
 router.post(
     '/forget-password',
     userForgetPasswordSchema,
     validateRequestSchema,
-    AdminUserController.forgetPassword,
+    adminUserController.forgetPassword,
 );
 router.put(
     '/new-password',
     newPasswordSchema,
     validateRequestSchema,
-    AdminUserController.newPassword,
+    adminUserController.newPassword,
 );
 
 router.delete(
@@ -52,13 +54,13 @@ router.delete(
     adminMiddleware,
     paramSchema,
     validateRequestSchema,
-    AdminUserController.delete,
+    adminUserController.delete,
 );
 router.post(
     '/login',
     userLoginSchema,
     validateRequestSchema,
-    AdminUserController.login,
+    adminUserController.login,
 );
 router.put(
     '/change-password/:id',
@@ -67,7 +69,7 @@ router.put(
     paramSchema,
     adminChangePasswordSchema,
     validateRequestSchema,
-    AdminUserController.changePassword,
+    adminUserController.changePassword,
 );
 router.put(
     '/update/:id',
@@ -76,7 +78,7 @@ router.put(
     paramSchema,
     adminUserUpdateSchema,
     validateRequestSchema,
-    AdminUserController.update,
+    adminUserController.update,
 );
 
 export default router;

@@ -14,60 +14,63 @@ import {
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware } from '@middleware/auth';
 
+const adminUserController = new AdminUserController();
+const userController = new UserController();
+
 const router = Router();
 
 // User Router
-router.get('/', authMiddleware, UserController.singleUser);
+router.get('/', authMiddleware, userController.singleUser);
 router.post(
     '/register',
     userRegisterSchema,
     validateRequestSchema,
-    UserController.register,
+    userController.register,
 );
 router.post(
     '/resend',
     userResendSchema,
     validateRequestSchema,
-    UserController.resend,
+    userController.resend,
 );
 router.post(
     '/verify',
     userVerifySchema,
     validateRequestSchema,
-    UserController.verify,
+    userController.verify,
 );
 router.post(
     '/forget-password',
     userForgetPasswordSchema,
     validateRequestSchema,
-    AdminUserController.forgetPassword,
+    adminUserController.forgetPassword,
 );
 router.put(
     '/new-password',
     newPasswordSchema,
     validateRequestSchema,
-    AdminUserController.newPassword,
+    adminUserController.newPassword,
 );
-router.delete('/delete', authMiddleware, UserController.delete);
+router.delete('/delete', authMiddleware, userController.delete);
 router.post(
     '/login',
     userLoginSchema,
     validateRequestSchema,
-    AdminUserController.login,
+    adminUserController.login,
 );
 router.put(
     '/change-password',
     userChangePasswordSchema,
     validateRequestSchema,
     authMiddleware,
-    UserController.changePassword,
+    userController.changePassword,
 );
 router.put(
     '/update',
     userUpdateSchema,
     validateRequestSchema,
     authMiddleware,
-    UserController.update,
+    userController.update,
 );
 
 export default router;

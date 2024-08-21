@@ -8,7 +8,7 @@ import { CustomError } from 'types';
 const prisma = new PrismaClient();
 
 export class UserController {
-    static async singleUser(req: Request, res: Response) {
+    async singleUser(req: Request, res: Response) {
         //@ts-ignore
         const userId = req.user.id;
         try {
@@ -22,7 +22,7 @@ export class UserController {
         }
     }
 
-    static async register(req: Request, res: Response) {
+    async register(req: Request, res: Response) {
         const { fullname, email } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
@@ -78,7 +78,7 @@ export class UserController {
         }
     }
 
-    static async resend(req: Request, res: Response) {
+    async resend(req: Request, res: Response) {
         const { email } = req.body;
 
         try {
@@ -122,7 +122,7 @@ export class UserController {
         }
     }
 
-    static async verify(req: Request, res: Response) {
+    async verify(req: Request, res: Response) {
         const { email, code } = req.body;
 
         try {
@@ -174,7 +174,7 @@ export class UserController {
         }
     }
 
-    static async delete(req: Request, res: Response) {
+    async delete(req: Request, res: Response) {
         //@ts-ignore
         const userId = req.user.id;
 
@@ -214,7 +214,7 @@ export class UserController {
         }
     }
 
-    static async changePassword(req: Request, res: Response) {
+    async changePassword(req: Request, res: Response) {
         //@ts-ignore
         const userId = req.user.id;
 
@@ -251,14 +251,15 @@ export class UserController {
             });
 
             return res.status(200).json('Password changed successfully');
-
         } catch (error) {
             console.error('Error changing password:', error);
-            return res.status(500).json('An error occurred while changing the password');
+            return res
+                .status(500)
+                .json('An error occurred while changing the password');
         }
     }
 
-    static async update(req: Request, res: Response) {
+    async update(req: Request, res: Response) {
         //@ts-ignore
         const userId = req.user.id;
         const { fullname } = req.body;
@@ -275,10 +276,11 @@ export class UserController {
             });
 
             return res.status(200).json(updatedUser);
-
         } catch (error) {
             console.error('Error updating user:', error);
-            return res.status(500).json('An error occurred while updating the user');
+            return res
+                .status(500)
+                .json('An error occurred while updating the user');
         }
     }
 }

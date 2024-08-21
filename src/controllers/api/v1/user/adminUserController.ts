@@ -11,12 +11,12 @@ const prisma = new PrismaClient();
 export class AdminUserController {
     // User CRUD
 
-    static async allUser(req: Request, res: Response) {
+    async allUser(req: Request, res: Response) {
         const Users = await prisma.user.findMany();
         return res.json(Users);
     }
 
-    static async singleUser(req: Request, res: Response) {
+    async singleUser(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
@@ -34,7 +34,7 @@ export class AdminUserController {
         }
     }
 
-    static async register(req: Request, res: Response) {
+    async register(req: Request, res: Response) {
         const password = await bcrypt.hash(req.body.password, 10);
         const { fullname, email, is_active, type } = req.body;
 
@@ -67,7 +67,7 @@ export class AdminUserController {
         }
     }
 
-    static async delete(req: Request, res: Response) {
+    async delete(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
@@ -110,7 +110,7 @@ export class AdminUserController {
         }
     }
 
-    static async forgetPassword(req: Request, res: Response) {
+    async forgetPassword(req: Request, res: Response) {
         const { email } = req.body;
 
         try {
@@ -154,7 +154,7 @@ export class AdminUserController {
         }
     }
 
-    static async newPassword(req: Request, res: Response) {
+    async newPassword(req: Request, res: Response) {
         const { email, code } = req.body;
         const password = await bcrypt.hash(req.body.password, 10);
 
@@ -207,7 +207,7 @@ export class AdminUserController {
         }
     }
 
-    static async login(req: Request, res: Response) {
+    async login(req: Request, res: Response) {
         const { email, password } = req.body;
         const SecretKey = process.env.SECRET_KEY as string;
 
@@ -243,7 +243,7 @@ export class AdminUserController {
         }
     }
 
-    static async changePassword(req: Request, res: Response) {
+    async changePassword(req: Request, res: Response) {
         const userId = req.params.id;
         const { newPassword, repeatNewPassword } = req.body;
 
@@ -279,7 +279,7 @@ export class AdminUserController {
         }
     }
 
-    static async update(req: Request, res: Response) {
+    async update(req: Request, res: Response) {
         const userId = parseInt(req.params.id);
 
         const { fullname, email, type, is_active } = req.body;
