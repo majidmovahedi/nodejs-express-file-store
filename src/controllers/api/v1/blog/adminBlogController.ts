@@ -72,14 +72,12 @@ export class AdminBlogController {
     async updateBlog(req: Request, res: Response) {
         const { id } = req.params;
         const updatedAt = new Date();
-
         const authorId = Number(req.user?.id);
-
         const categoryId = parseInt(req.body.categoryId);
         const { title, content, imageurl } = req.body;
 
-        const blog = await prisma.blog
-            .update({
+        try {
+            const blog = await prisma.blog.update({
                 where: { id: parseInt(id) },
                 data: {
                     title,
@@ -89,18 +87,31 @@ export class AdminBlogController {
                     updatedAt,
                     authorId,
                 },
-            })
-            .then((blog) => {
-                return res.status(201).json(blog);
-            })
-            .catch((error) => {
-                if (error.code == 'P2025') {
-                    return res.status(409).json('This Id is Not Exist!');
-                }
-                return res
-                    .status(520)
-                    .json('Unknown Error, Please Try Again Later.');
             });
+
+            return res.status(200).json(blog);
+        } catch (error) {
+            const prismaError = error as CustomError;
+            if (prismaError.code === 'P2025') {
+                return res.status(404).json({
+                    message: 'This Id does not exist!',
+                    code: prismaError.code,
+                });
+            } else if (prismaError.code === 'P2003') {
+                return res.status(404).json({
+                    message: 'This Category does not exist!',
+                    code: prismaError.code,
+                });
+
+            }else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
+
     }
 
     async deleteBlog(req: Request, res: Response) {
