@@ -79,50 +79,45 @@ export class UserController {
     static async resend(req: Request, res: Response) {
         const { email } = req.body;
 
-        // Find User
-        const user = await prisma.user
-            .findUnique({
+        try {
+            // Find User
+            const user = await prisma.user.findUnique({
                 where: { email: email },
-            })
-            .then(async (user) => {
-                if (user?.is_active == true) {
-                    return res.status(400).json('Your Account is Active!');
-                }
-
-                try {
-                    // Add OTP Code to otp Table
-                    const userId = Number(user?.id);
-                    const code = getRandomInt();
-                    const result = await prisma.otp.create({
-                        data: {
-                            userId,
-                            code,
-                        },
-                    });
-
-                    // Send Code to User Email
-                    await transporter.sendMail({
-                        from: process.env.EMAIL,
-                        to: email,
-                        subject: 'Activation Code',
-                        html: `<h1>Your Activation Code is : ${code}</h1>`,
-                    });
-                    return res.json(result);
-                } catch (error) {
-                    if (!user) {
-                        return res.status(404).json('This User is Not Exist!');
-                    }
-                    return res
-                        .status(520)
-                        .json('Unknown Error, Please Try Again Later.');
-                }
             });
-        // .catch((user)=>{
-        //     if(!user){
-        //         return res.status(404).json("This User is Not Exist!");
-        //     }
-        //     return res.status(520).json("Unknown Error, Please Try Again Later.");
-        // })
+
+            if (!user) {
+                return res.status(404).json('This User Does Not Exist!');
+            }
+
+            if (user.is_active) {
+                return res.status(400).json('Your Account is Active!');
+            }
+
+            // Add OTP Code to otp Table
+            const userId = Number(user.id);
+            const code = getRandomInt();
+            const otpResult = await prisma.otp.create({
+                data: {
+                    userId,
+                    code,
+                },
+            });
+
+            // Send Code to User Email
+            await transporter.sendMail({
+                from: process.env.EMAIL,
+                to: email,
+                subject: 'Activation Code',
+                html: `<h1>Your Activation Code is : ${code}</h1>`,
+            });
+
+            return res.json(otpResult);
+
+        } catch (error) {
+            console.error('Error resend code for user:', error);
+            return res.status(520).json('An error occurred while resend code for user.');
+        }
+
     }
 
     static async verify(req: Request, res: Response) {
