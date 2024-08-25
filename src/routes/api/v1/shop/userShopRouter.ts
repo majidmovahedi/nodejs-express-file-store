@@ -13,7 +13,6 @@ const router = Router();
 // Admin Category Router
 router.get('/category', adminShopController.allCategory);
 
-
 // Admin Blog Router
 router.get('/', adminShopController.allProduct);
 router.get(

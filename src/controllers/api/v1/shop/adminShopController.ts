@@ -35,7 +35,7 @@ export class AdminShopController {
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
-        const { title, content, imageurl, fileurl , price } = req.body;
+        const { title, content, imageurl, fileurl, price } = req.body;
 
         try {
             const result = await prisma.product.create({
@@ -76,7 +76,7 @@ export class AdminShopController {
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
-        const { title, content, imageurl , fileurl , price } = req.body;
+        const { title, content, imageurl, fileurl, price } = req.body;
 
         try {
             const product = await prisma.product.update({

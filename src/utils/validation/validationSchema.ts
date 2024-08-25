@@ -145,5 +145,73 @@ export const userUpdateSchema = [
         .withMessage('FullName Cant be Null!'),
 ];
 
-export const productSchema = [];
-export const productUpdateSchema = [];
+export const productSchema = [
+    body('title').notEmpty().withMessage('Title Cant be Null!'),
+    body('title')
+        .isLength({ min: 5 })
+        .withMessage('Title Cant be less Than 5 Characters!'),
+
+    body('content').notEmpty().withMessage('Content Cant be Null!'),
+    body('content')
+        .isLength({ min: 20 })
+        .withMessage('Content Cant be less Than 20 Characters!'),
+    body('categoryId').notEmpty().withMessage('Category ID Cant be Null!'),
+    body('price').notEmpty().withMessage('Price Cant be Null!'),
+    body('price').isNumeric().withMessage('Please Enter The Price Correctly!'),
+
+    body('imageurl')
+        .custom((value, { req }) => {
+            if (validUrl.isUri(value)) {
+                return value === req.body.imageurl;
+            }
+        })
+        .withMessage('Invalid Url'),
+
+    body('fileurl')
+        .custom((value, { req }) => {
+            if (validUrl.isUri(value)) {
+                return value === req.body.fileurl;
+            }
+        })
+        .withMessage('Invalid Url'),
+];
+export const productUpdateSchema = [
+    body('title').optional().notEmpty().withMessage('Title Cant be Null!'),
+    body('title')
+        .optional()
+        .isLength({ min: 5 })
+        .withMessage('Title Cant be less Than 5 Characters!'),
+
+    body('content').optional().notEmpty().withMessage('Content Cant be Null!'),
+    body('content')
+        .optional()
+        .isLength({ min: 20 })
+        .withMessage('Content Cant be less Than 20 Characters!'),
+    body('categoryId')
+        .optional()
+        .notEmpty()
+        .withMessage('Category ID Cant be Null!'),
+    body('price').optional().notEmpty().withMessage('Price Cant be Null!'),
+    body('price')
+        .optional()
+        .isNumeric()
+        .withMessage('Please Enter The Price Correctly!'),
+
+    body('imageurl')
+        .optional()
+        .custom((value, { req }) => {
+            if (validUrl.isUri(value)) {
+                return value === req.body.imageurl;
+            }
+        })
+        .withMessage('Invalid Url'),
+
+    body('fileurl')
+        .optional()
+        .custom((value, { req }) => {
+            if (validUrl.isUri(value)) {
+                return value === req.body.fileurl;
+            }
+        })
+        .withMessage('Invalid Url'),
+];
