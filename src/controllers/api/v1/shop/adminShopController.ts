@@ -71,6 +71,51 @@ export class AdminShopController {
         }
     }
 
+    async updateProduct(req: Request, res: Response) {
+        const { id } = req.params;
+        const updatedAt = new Date();
+        const authorId = Number(req.user?.id);
+        const categoryId = parseInt(req.body.categoryId);
+        const { title, content, imageurl , fileurl , price } = req.body;
+
+        try {
+            const product = await prisma.product.update({
+                where: { id: parseInt(id) },
+                data: {
+                    title,
+                    content,
+                    imageurl,
+                    fileurl,
+                    price,
+                    categoryId,
+                    updatedAt,
+                    authorId,
+                },
+            });
+
+            return res.status(200).json(product);
+        } catch (error) {
+            const prismaError = error as CustomError;
+            if (prismaError.code === 'P2025') {
+                return res.status(404).json({
+                    message: 'This Id does not exist!',
+                    code: prismaError.code,
+                });
+            } else if (prismaError.code === 'P2003') {
+                return res.status(404).json({
+                    message: 'This Category does not exist!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
+    }
+
     async deleteProduct(req: Request, res: Response) {
         const { id } = req.params;
 

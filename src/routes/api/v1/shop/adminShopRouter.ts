@@ -46,13 +46,13 @@ router.post(
     validateRequestSchema,
     adminShopController.createProduct,
 );
-// router.put(
-//     '/:id',
-//     paramSchema,
-//     productUpdateSchema,
-//     validateRequestSchema,
-//     adminShopController.updateProduct,
-// );
+router.put(
+    '/:id',
+    paramSchema,
+    productUpdateSchema,
+    validateRequestSchema,
+    adminShopController.updateProduct,
+);
 router.delete('/:id', paramSchema, adminShopController.deleteProduct);
 
 export default router;
