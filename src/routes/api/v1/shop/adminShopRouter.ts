@@ -3,6 +3,8 @@ import { AdminShopController } from '@controllers/api/v1/shop/adminShopControlle
 import {
     paramSchema,
     categorySchema,
+    productSchema,
+    productUpdateSchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
@@ -38,7 +40,19 @@ router.get(
     validateRequestSchema,
     adminShopController.singleProduct,
 );
-
+router.post(
+    '/',
+    productSchema,
+    validateRequestSchema,
+    adminShopController.createProduct,
+);
+// router.put(
+//     '/:id',
+//     paramSchema,
+//     productUpdateSchema,
+//     validateRequestSchema,
+//     adminShopController.updateProduct,
+// );
 router.delete('/:id', paramSchema, adminShopController.deleteProduct);
 
 export default router;

@@ -144,3 +144,6 @@ export const userUpdateSchema = [
         .notEmpty()
         .withMessage('FullName Cant be Null!'),
 ];
+
+export const productSchema = [];
+export const productUpdateSchema = [];
