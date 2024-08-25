@@ -32,5 +32,10 @@ router.delete('/category/:id', paramSchema, adminShopController.deleteCategory);
 
 // Admin Blog Router
 router.get('/', adminShopController.allProduct);
-
+router.get(
+    '/:id',
+    paramSchema,
+    validateRequestSchema,
+    adminShopController.singleProduct,
+);
 export default router;
