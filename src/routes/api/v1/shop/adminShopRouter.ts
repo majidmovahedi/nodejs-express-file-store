@@ -38,4 +38,7 @@ router.get(
     validateRequestSchema,
     adminShopController.singleProduct,
 );
+
+router.delete('/:id', paramSchema, adminShopController.deleteProduct);
+
 export default router;

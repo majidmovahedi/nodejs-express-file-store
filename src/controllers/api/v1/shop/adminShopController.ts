@@ -30,6 +30,34 @@ export class AdminShopController {
         }
     }
 
+
+
+    async deleteProduct(req: Request, res: Response) {
+        const { id } = req.params;
+
+        try {
+            await prisma.product.delete({
+                where: { id: parseInt(id) },
+            });
+
+            return res.status(200).json('Product is Deleted Successfully.');
+        } catch (error) {
+            const prismaError = error as CustomError;
+            if (prismaError.code === 'P2025') {
+                return res.status(404).json({
+                    message: 'This Id does not exist!',
+                    code: prismaError.code,
+                });
+            } else {
+                console.error('Unexpected error:', prismaError);
+                return res.status(520).json({
+                    message: 'Unknown error, please try again later.',
+                    details: prismaError.message,
+                });
+            }
+        }
+    }
+
     // Admin Category CRUD
 
     async allCategory(req: Request, res: Response) {
