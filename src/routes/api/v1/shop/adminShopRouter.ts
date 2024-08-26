@@ -13,7 +13,7 @@ const adminShopController = new AdminShopController();
 
 const router = Router();
 
-// router.use(authMiddleware, adminMiddleware);
+router.use(authMiddleware, adminMiddleware);
 
 // Admin Category Router
 router.get('/category', adminShopController.allCategory);
@@ -32,7 +32,7 @@ router.put(
 );
 router.delete('/category/:id', paramSchema, adminShopController.deleteCategory);
 
-// Admin Blog Router
+// Admin Shop Router
 router.get('/', adminShopController.allProduct);
 router.get(
     '/:id',

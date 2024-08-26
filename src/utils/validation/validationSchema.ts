@@ -175,6 +175,7 @@ export const productSchema = [
         })
         .withMessage('Invalid Url'),
 ];
+
 export const productUpdateSchema = [
     body('title').optional().notEmpty().withMessage('Title Cant be Null!'),
     body('title')
