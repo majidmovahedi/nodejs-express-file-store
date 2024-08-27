@@ -1,24 +1,27 @@
 import { Router } from 'express';
-import { AdminShopController } from '@controllers/api/v1/shop/adminShopController';
+import { UserShopController } from '@controllers/api/v1/shop/userShopController';
+import { authMiddleware } from '@middleware/auth';
 import {
     paramSchema,
     categorySchema,
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 
-const adminShopController = new AdminShopController();
+const userShopController = new UserShopController();
 
 const router = Router();
 
-// Admin Category Router
-router.get('/category', adminShopController.allCategory);
+// User Category Router
+router.get('/category', userShopController.allCategory);
 
-// Admin Blog Router
-router.get('/', adminShopController.allProduct);
+// User Blog Router
+router.get('/', userShopController.allProduct);
 router.get(
     '/:id',
     paramSchema,
     validateRequestSchema,
-    adminShopController.singleProduct,
+    userShopController.singleProduct,
 );
+// router.post('/payment', authMiddleware, userShopController.payment);
+// router.get('/payment/callback', authMiddleware, userShopController.verify);
 export default router;

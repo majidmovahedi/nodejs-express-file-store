@@ -22,6 +22,7 @@ dotenv.config();
 const port = process.env.PORT;
 
 app.use("/api", apiVersionRouter);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(port, () => {
   console.log(`Listening On Port ${port}`);

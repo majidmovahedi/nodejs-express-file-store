@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { CustomError } from 'types';
+// import createPaymentLink from '@utils/payment/pay.ir';
+import axios from 'axios';
 
 const prisma = new PrismaClient();
 
-export class AdminShopController {
-    // Admin Shop CRUD
+export class UserShopController {
+    // User Shop CRUD
 
     async allProduct(req: Request, res: Response) {
         const products = await prisma.product.findMany();
@@ -30,7 +31,15 @@ export class AdminShopController {
         }
     }
 
-    // Admin Category CRUD
+    // async payment(req: Request, res: Response) {
+    //     const { amount } = req.body;
+    // }
+
+    // async verify(req: Request, res: Response) {
+    //     const { token, ref_id } = req.query;
+    // }
+
+    // User Category CRUD
 
     async allCategory(req: Request, res: Response) {
         const categories = await prisma.productCategory.findMany();

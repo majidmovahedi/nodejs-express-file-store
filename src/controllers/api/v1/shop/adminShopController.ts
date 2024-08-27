@@ -31,13 +31,18 @@ export class AdminShopController {
     }
 
     async createProduct(req: Request, res: Response) {
+
         const createdAt = new Date();
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
-        const { title, content, imageurl, fileurl } = req.body;
-
+        const { title, content, fileurl } = req.body;
+        const imageurl = `/upload/${req.file}`;
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+          }
+          res.send(`File uploaded successfully: ${req.file.filename}`);
         try {
             const result = await prisma.product.create({
                 data: {
