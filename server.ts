@@ -21,8 +21,15 @@ app.use(express.json({ type: "application/json" }));
 dotenv.config();
 const port = process.env.PORT;
 
+const uploadsDir = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsDir));
+
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    
 app.use("/api", apiVersionRouter);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.listen(port, () => {
   console.log(`Listening On Port ${port}`);

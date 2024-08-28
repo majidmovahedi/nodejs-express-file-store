@@ -40,8 +40,9 @@ export class AdminShopController {
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
         const image = req.file ;
-        const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
-        // const imageurl = image?.path.replace(/\\/g, '/') || "";
+        // const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
+        const imageurl = image?.path.replace(/\\/g, '/') || "";
+
         try {
             const result = await prisma.product.create({
                 data: {
