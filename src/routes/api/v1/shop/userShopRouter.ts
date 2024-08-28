@@ -23,5 +23,6 @@ router.get(
     userShopController.singleProduct,
 );
 // router.post('/payment', authMiddleware, userShopController.payment);
+// router.post('/payment', authMiddleware, userShopController.payment);
 // router.get('/payment/callback', authMiddleware, userShopController.verify);
 export default router;

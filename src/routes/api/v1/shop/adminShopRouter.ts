@@ -44,9 +44,9 @@ router.get(
 );
 router.post(
     '/',
+    uploadMiddleware,
     productSchema,
     validateRequestSchema,
-    uploadMiddleware,
     adminShopController.createProduct,
 );
 router.put(

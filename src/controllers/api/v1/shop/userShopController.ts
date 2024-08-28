@@ -32,6 +32,36 @@ export class UserShopController {
     }
 
     // async payment(req: Request, res: Response) {
+    //     const API_KEY = 'QGVARFN-YNKMMSD-P5K26PM-NF2CNG0';
+    //     const { amount, currency, order_id } = req.body;
+
+    //     try {
+    //         const response = await axios.post(
+    //           'https://api.coingate.com/v2/orders',
+    //           {
+    //             price_amount: amount,
+    //             price_currency: currency,
+    //             order_id: order_id,
+    //             order_description: 'Description of the product',
+    //             success_url: 'https://majidmovahedi.ir',
+    //             cancel_url: 'https://your-cancel-url.com',
+    //           },
+    //           {
+    //             headers: {
+    //               'Content-Type': 'application/json',
+    //               'Authorization': `Bearer ${API_KEY}`,
+    //             }
+    //           }
+    //         );
+
+    //         res.json(response.data);
+    //       } catch (error) {
+    //         console.error(error);
+    //         res.status(500).send('Error creating payment');
+    //       }
+    // }
+
+    // async payment(req: Request, res: Response) {
     //     const { amount } = req.body;
     // }
 

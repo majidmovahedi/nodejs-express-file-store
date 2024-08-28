@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomError } from 'types';
+import path from 'path';
 
 const prisma = new PrismaClient();
 
@@ -38,17 +39,15 @@ export class AdminShopController {
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
-        const imageurl = `/upload/${req.file}`;
-        if (!req.file) {
-            return res.status(400).send('No file uploaded.');
-          }
-          res.send(`File uploaded successfully: ${req.file.filename}`);
+        const image = req.file ;
+        const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
+        // const imageurl = image?.path.replace(/\\/g, '/') || "";
         try {
             const result = await prisma.product.create({
                 data: {
                     title,
                     content,
-                    imageurl,
+                    imageurl: imageurl,
                     fileurl,
                     price,
                     createdAt,
