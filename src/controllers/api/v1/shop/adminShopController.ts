@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomError } from 'types';
 import path from 'path';
+import fs from 'fs-extra';
 
 const prisma = new PrismaClient();
 
@@ -48,7 +49,7 @@ export class AdminShopController {
                 data: {
                     title,
                     content,
-                    imageurl: imageurl,
+                    imageurl,
                     fileurl,
                     price,
                     createdAt,
@@ -83,8 +84,10 @@ export class AdminShopController {
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
-        const { title, content, imageurl, fileurl } = req.body;
-
+        const { title, content, fileurl } = req.body;
+        const image = req.file ;
+        // const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
+        const imageurl = image?.path.replace(/\\/g, '/') || "";
         try {
             const product = await prisma.product.update({
                 where: { id: parseInt(id) },
@@ -127,6 +130,17 @@ export class AdminShopController {
         const { id } = req.params;
 
         try {
+            const product =  await prisma.product.findUnique({
+                where: { id: parseInt(id) },
+            });
+            if (product) {
+                // Delete the image file if it exists
+                if (product.imageurl) {
+                  const filePath = path.join(__dirname, './uploads', path.basename(product.imageurl));
+                  await fs.remove(filePath);
+                }
+            }
+
             await prisma.product.delete({
                 where: { id: parseInt(id) },
             });
