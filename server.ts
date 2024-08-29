@@ -6,6 +6,8 @@ import swaggerUi from "swagger-ui-express";
 import fs from "fs";
 import path from "path";
 
+const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
+
 const app = express();
 
 // Serve the Swagger API documentation
@@ -21,12 +23,11 @@ app.use(express.json({ type: "application/json" }));
 dotenv.config();
 const port = process.env.PORT;
 
-const uploadsDir = path.join(__dirname, "uploads");
-app.use("/uploads", express.static(uploadsDir));
+app.use("/uploads", express.static(UPLOAD_DIR));
 
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
+// if (!fs.existsSync(uploadsDir)) {
+//   fs.mkdirSync(uploadsDir, { recursive: true });
+// }
 
 app.use("/api", apiVersionRouter);
 

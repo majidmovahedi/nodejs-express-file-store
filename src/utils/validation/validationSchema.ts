@@ -150,7 +150,7 @@ export const productSchema = [
     body('price').notEmpty().withMessage('Price Cant be Null!'),
     body('price').isNumeric().withMessage('Please Enter The Price Correctly!'),
 
-    body('imageurl').notEmpty().withMessage('Please Upload image'),
+    // body('imageurl').notEmpty().withMessage('Please Upload image'),
 
     // body('fileurl')
     //     .custom((value, { req }) => {
@@ -183,7 +183,7 @@ export const productUpdateSchema = [
         .isNumeric()
         .withMessage('Please Enter The Price Correctly!'),
 
-    body('imageurl').optional().notEmpty().withMessage('Please Upload image'),
+    // body('imageurl').optional().notEmpty().withMessage('Please Upload image'),
 
     // body('fileurl')
     //     .optional()

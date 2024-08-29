@@ -1,10 +1,16 @@
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
+
+const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
 
 // Set up Multer storage engine
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Specify the folder to store uploaded files
+        if (!fs.existsSync(UPLOAD_DIR)) {
+            fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+        }
+        cb(null, UPLOAD_DIR);
     },
     filename: (req, file, cb) => {
         // Use the original name or create a unique name
