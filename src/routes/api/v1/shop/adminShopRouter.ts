@@ -10,7 +10,6 @@ import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
 import { uploadMiddleware } from '@middleware/uploadMiddleware';
 
-
 const adminShopController = new AdminShopController();
 
 const router = Router();

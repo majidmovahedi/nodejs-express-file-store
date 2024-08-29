@@ -33,16 +33,14 @@ export class AdminShopController {
     }
 
     async createProduct(req: Request, res: Response) {
-
         const createdAt = new Date();
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
-        const image = req.file ;
-        // const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
-        const imageurl = image?.path.replace(/\\/g, '/') || "";
+        const image = req.file;
+        const imageurl = image?.path.replace(/\\/g, '/') || '';
 
         try {
             const result = await prisma.product.create({
@@ -85,9 +83,8 @@ export class AdminShopController {
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
-        const image = req.file ;
-        // const imageurl = path.join(__dirname ,image?.path.replace(/\\/g, '/') || "");
-        const imageurl = image?.path.replace(/\\/g, '/') || "";
+        const image = req.file;
+        const imageurl = image?.path.replace(/\\/g, '/') || '';
         try {
             const product = await prisma.product.update({
                 where: { id: parseInt(id) },
@@ -130,17 +127,18 @@ export class AdminShopController {
         const { id } = req.params;
 
         try {
-            const product =  await prisma.product.findUnique({
+            const product = await prisma.product.findUnique({
                 where: { id: parseInt(id) },
             });
 
             if (product) {
-                // Delete the image file if it exists
                 if (product.imageurl) {
-                  const filePath = path.join('./uploads', path.basename(product.imageurl));
-                  await fs.remove(filePath);
+                    const filePath = path.join(
+                        './uploads',
+                        path.basename(product.imageurl),
+                    );
+                    await fs.remove(filePath);
                 }
-
             }
 
             await prisma.product.delete({
