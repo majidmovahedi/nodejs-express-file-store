@@ -133,12 +133,14 @@ export class AdminShopController {
             const product =  await prisma.product.findUnique({
                 where: { id: parseInt(id) },
             });
+
             if (product) {
                 // Delete the image file if it exists
                 if (product.imageurl) {
-                  const filePath = path.join(__dirname, './uploads', path.basename(product.imageurl));
+                  const filePath = path.join('./uploads', path.basename(product.imageurl));
                   await fs.remove(filePath);
                 }
+
             }
 
             await prisma.product.delete({
