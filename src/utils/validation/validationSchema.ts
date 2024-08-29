@@ -37,15 +37,6 @@ export const blogUpdateSchema = [
         .optional()
         .notEmpty()
         .withMessage('Category ID Cant be Null!'),
-
-    // body('imageurl')
-    //     .optional()
-    //     .custom((value, { req }) => {
-    //         if (validUrl.isUri(value)) {
-    //             return value === req.body.imageurl;
-    //         }
-    //     })
-    //     .withMessage('Invalid Url'),
 ];
 
 export const userLoginSchema = [
@@ -149,16 +140,6 @@ export const productSchema = [
     body('categoryId').notEmpty().withMessage('Category ID Cant be Null!'),
     body('price').notEmpty().withMessage('Price Cant be Null!'),
     body('price').isNumeric().withMessage('Please Enter The Price Correctly!'),
-
-    // body('imageurl').notEmpty().withMessage('Please Upload image'),
-
-    // body('fileurl')
-    //     .custom((value, { req }) => {
-    //         if (validUrl.isUri(value)) {
-    //             return value === req.body.fileurl;
-    //         }
-    //     })
-    //     .withMessage('Invalid Url'),
 ];
 
 export const productUpdateSchema = [
@@ -182,15 +163,4 @@ export const productUpdateSchema = [
         .optional()
         .isNumeric()
         .withMessage('Please Enter The Price Correctly!'),
-
-    // body('imageurl').optional().notEmpty().withMessage('Please Upload image'),
-
-    // body('fileurl')
-    //     .optional()
-    //     .custom((value, { req }) => {
-    //         if (validUrl.isUri(value)) {
-    //             return value === req.body.fileurl;
-    //         }
-    //     })
-    //     .withMessage('Invalid Url'),
 ];
