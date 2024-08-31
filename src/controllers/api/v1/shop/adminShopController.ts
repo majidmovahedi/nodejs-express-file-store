@@ -39,13 +39,20 @@ export class AdminShopController {
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
+
         const image = req.file;
         const imageurl = image?.path.replace(/\\/g, '/') || '';
+
+        // const file = req.file;
+        // const fileurl = file?.path.replace(/\\/g, '/') || '';
 
         try {
             if (!image) {
                 return res.status(400).json('No image uploaded.');
             }
+            // if (!file) {
+            //     return res.status(400).json('No image uploaded.');
+            // }
             const result = await prisma.product.create({
                 data: {
                     title,

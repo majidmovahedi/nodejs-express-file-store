@@ -25,10 +25,6 @@ const port = process.env.PORT;
 
 app.use("/uploads", express.static(UPLOAD_DIR));
 
-// if (!fs.existsSync(uploadsDir)) {
-//   fs.mkdirSync(uploadsDir, { recursive: true });
-// }
-
 app.use("/api", apiVersionRouter);
 
 app.listen(port, () => {
