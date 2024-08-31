@@ -1,3 +1,5 @@
-import upload from '@utils/upload/multer';
+import { productImageUpload, blogImageUpload } from '@utils/upload/multer';
 
-export const uploadMiddleware = upload.single('imageurl');
+export const uploadProductImageMiddleware =
+    productImageUpload.single('imageurl');
+export const uploadBlogImageMiddleware = blogImageUpload.single('imageurl');

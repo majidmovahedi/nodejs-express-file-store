@@ -1,24 +1,34 @@
-import multer from 'multer';
+import multer, { StorageEngine } from 'multer';
 import path from 'path';
 import fs from 'fs';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
 
-// Set up Multer storage engine
-const storage = multer.diskStorage({
+// Storage configuration for blog images
+const blogImageStorage: StorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
-        if (!fs.existsSync(UPLOAD_DIR)) {
-            fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+        if (!fs.existsSync(`${UPLOAD_DIR}/images/blog`)) {
+            fs.mkdirSync(`${UPLOAD_DIR}/images/blog`, { recursive: true });
         }
-        cb(null, UPLOAD_DIR);
+        cb(null, `${UPLOAD_DIR}/images/blog`);
     },
     filename: (req, file, cb) => {
-        // Use the original name or create a unique name
         cb(null, Date.now() + path.extname(file.originalname));
     },
 });
 
-// Initialize Multer with the storage configuration
-const upload = multer({ storage: storage });
+// Storage configuration for product images
+const productImageStorage: StorageEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+        if (!fs.existsSync(`${UPLOAD_DIR}/images/product`)) {
+            fs.mkdirSync(`${UPLOAD_DIR}/images/product`, { recursive: true });
+        }
+        cb(null, `${UPLOAD_DIR}/images/product`);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
 
-export default upload;
+export const blogImageUpload = multer({ storage: blogImageStorage });
+export const productImageUpload = multer({ storage: productImageStorage });
