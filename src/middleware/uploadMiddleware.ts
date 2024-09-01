@@ -1,23 +1,23 @@
-// import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import { productImageUpload, productFileUpload } from '@utils/upload/multer';
+// // import multer from 'multer';
 
-// import { productImageUpload , productFileUpload } from '@utils/upload/multer';
+// Middleware to handle uploads to both locations
+export const uploadMiddleware = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const productImage = productImageUpload.single('imageurl');
+    const productFile = productFileUpload.single('fileurl');
 
-// export const uploadMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    productImage(req, res, (err) => {
+        if (err) return next(err);
 
-//     productFileUpload.single('fileurl')(req, res, (err) => {
-//         if (err) {
-//           return next(err);
-//         }
-//     productImageUpload.single('imageurl')(req, res, (err) => {
-//         if (err) {
-//         return next(err);
-//         }
+        productFile(req, res, (err) => {
+            if (err) return next(err);
 
-//       next();
-//     });
-//   });
-// };
-
-// Middleware to handle file uploads
-// export const handleImageUpload = productImageUpload.single('imageurl');
-// export const handleProductFileUpload = productFileUpload.single('fileurl');
+            next();
+        });
+    });
+};

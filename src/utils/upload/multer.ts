@@ -1,26 +1,9 @@
-import multer, { StorageEngine } from 'multer';
+import multer, { FileFilterCallback, StorageEngine } from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { NextFunction } from 'express';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
-
-// // File filter for images (JPG, PNG, GIF)
-// const imageFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-//     if (['image/jpeg', 'image/png', 'image/gif'].includes(file.mimetype)) {
-//       cb(null, true);
-//     } else {
-//       cb(null, false);
-//     }
-//   };
-
-//   // File filter for ZIP and RAR files
-//   const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-//     if (['application/zip', 'application/x-zip-compressed', 'application/x-rar-compressed'].includes(file.mimetype)) {
-//       cb(null, true);
-//     } else {
-//       cb(new Error('Please upload a ZIP or RAR file.'), false);
-//     }
-//   };
 
 // // Storage configuration for blog images
 // const blogImageStorage: StorageEngine = multer.diskStorage({
@@ -33,6 +16,7 @@ const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
 //     filename: (req, file, cb) => {
 //         cb(null, Date.now() + path.extname(file.originalname));
 //     },
+
 // });
 
 // Storage configuration for product images
@@ -61,6 +45,20 @@ const productFileStorage: StorageEngine = multer.diskStorage({
     },
 });
 
-// export const blogImageUpload = multer({ storage: blogImageStorage });
+// export const blogImageUpload = multer({  storage: blogImageStorage });
 export const productImageUpload = multer({ storage: productImageStorage });
 export const productFileUpload = multer({ storage: productFileStorage });
+
+// export const blogImageUpload = multer({
+//     storage: blogImageStorage,
+//     limits: {
+//       fileSize: 5000000 // 5000000 Bytes = 5 MB
+//     },
+//     fileFilter(req, file, cb) {
+//       if (!file.originalname.match(/\.(png|jpg)$/)) {
+//          // upload only png and jpg format
+//          return cb(new Error('Please upload a Image'))
+//        }
+//      cb(null, true)
+//   }
+//  });
