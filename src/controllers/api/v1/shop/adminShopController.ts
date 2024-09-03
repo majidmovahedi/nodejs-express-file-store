@@ -94,11 +94,17 @@ export class AdminShopController {
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
-        const { title, content, fileurl } = req.body;
-        const productImage = req.file;
-        const imageurl = productImage?.path.replace(/\\/g, '/') || '';
+        const { title, content, fileurl, imageurl } = req.body;
+        // const productImage = req.file;
+        // const imageurl = productImage?.path.replace(/\\/g, '/') || '';
         try {
-            const product = await prisma.product.update({
+
+
+            // const product = await prisma.product.findUnique({
+            //     where: { id: parseInt(id) },
+            // });
+
+            const newProduct = await prisma.product.update({
                 where: { id: parseInt(id) },
                 data: {
                     title,
@@ -112,7 +118,20 @@ export class AdminShopController {
                 },
             });
 
-            return res.status(200).json(product);
+            // if (product) {
+            //     if (product.imageurl) {
+            //         const filePath = path.join(
+            //             `${UPLOAD_DIR}images/product`,
+            //             path.basename(product.imageurl),
+            //         );
+            //         await fs.remove(filePath);
+            //     }
+            // }
+
+
+
+
+            return res.status(200).json(newProduct);
         } catch (error) {
             const prismaError = error as CustomError;
             if (prismaError.code === 'P2025') {

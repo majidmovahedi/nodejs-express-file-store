@@ -51,6 +51,7 @@ router.post(
 );
 router.put(
     '/:id',
+    productImageUpload.single('imageurl'),
     paramSchema,
     productUpdateSchema,
     validateRequestSchema,
