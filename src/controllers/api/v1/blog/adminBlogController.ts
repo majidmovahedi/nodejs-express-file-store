@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomError } from 'types';
+import path from 'path';
+import fs from 'fs-extra';
+
+const UPLOAD_DIR = process.env.UPLOAD_DIR;
 
 const prisma = new PrismaClient();
 
@@ -123,6 +127,20 @@ export class AdminBlogController {
         const { id } = req.params;
 
         try {
+            const blog = await prisma.blog.findUnique({
+                where: { id: parseInt(id) },
+            });
+
+            if (blog) {
+                if (blog.imageurl) {
+                    const filePath = path.join(
+                        `${UPLOAD_DIR}images/blog`,
+                        path.basename(blog.imageurl),
+                    );
+                    await fs.remove(filePath);
+                }
+            }
+
             await prisma.blog.delete({
                 where: { id: parseInt(id) },
             });
