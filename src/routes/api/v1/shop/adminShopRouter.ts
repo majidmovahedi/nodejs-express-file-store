@@ -8,7 +8,7 @@ import {
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
-import { uploadMiddleware } from '@middleware/uploadMiddleware';
+import { productImageUpload } from '@utils/upload/multer';
 
 const adminShopController = new AdminShopController();
 
@@ -43,7 +43,8 @@ router.get(
 );
 router.post(
     '/',
-    uploadMiddleware,
+    // productFileUpload.single('fileurl'),
+    productImageUpload.single('imageurl'),
     productSchema,
     validateRequestSchema,
     adminShopController.createProduct,

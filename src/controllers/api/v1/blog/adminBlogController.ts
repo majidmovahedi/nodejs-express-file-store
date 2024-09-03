@@ -35,9 +35,16 @@ export class AdminBlogController {
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
         const categoryId = parseInt(req.body.categoryId);
-        const { title, content, imageurl } = req.body;
+        const { title, content } = req.body;
+
+        const blogImage = req.file;
+        const imageurl = blogImage?.path.replace(/\\/g, '/') || '';
 
         try {
+            if (!blogImage) {
+                return res.status(400).json('No image uploaded.');
+            }
+
             const result = await prisma.blog.create({
                 data: {
                     title,
