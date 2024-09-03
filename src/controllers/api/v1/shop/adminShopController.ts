@@ -4,6 +4,8 @@ import { CustomError } from 'types';
 import path from 'path';
 import fs from 'fs-extra';
 
+const UPLOAD_DIR = process.env.UPLOAD_DIR;
+
 const prisma = new PrismaClient();
 
 export class AdminShopController {
@@ -93,12 +95,9 @@ export class AdminShopController {
         const categoryId = parseInt(req.body.categoryId);
         const price = parseFloat(req.body.price);
         const { title, content, fileurl } = req.body;
-        const image = req.file;
-        const imageurl = image?.path.replace(/\\/g, '/') || '';
+        const productImage = req.file;
+        const imageurl = productImage?.path.replace(/\\/g, '/') || '';
         try {
-            if (!image) {
-                return res.status(400).json('No image uploaded.');
-            }
             const product = await prisma.product.update({
                 where: { id: parseInt(id) },
                 data: {
@@ -147,7 +146,7 @@ export class AdminShopController {
             if (product) {
                 if (product.imageurl) {
                     const filePath = path.join(
-                        './uploads',
+                        `${UPLOAD_DIR}images/product`,
                         path.basename(product.imageurl),
                     );
                     await fs.remove(filePath);
