@@ -104,7 +104,3 @@ For questions or suggestions, please contact us:
 
 - Email: majidmovahedinasab@gmail.com
 ```
-
-### Notes:
-
-This `README.md` provides a clear overview of the project, how to set it up, and where to find documentation and contact information.
