@@ -1,4 +1,3 @@
-```markdown
 # File Store API
 
 This project is a file store API developed using Express and TypeScript, with PostgreSQL and Prisma for database management. It provides functionality for managing products, users, and blog posts, including features for purchasing and downloading files. The API also includes search capabilities and documentation via Swagger.
@@ -103,4 +102,3 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 For questions or suggestions, please contact us:
 
 - Email: majidmovahedinasab@gmail.com
-
