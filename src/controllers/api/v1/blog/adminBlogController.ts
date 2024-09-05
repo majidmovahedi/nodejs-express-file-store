@@ -84,12 +84,28 @@ export class AdminBlogController {
         const { id } = req.params;
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
-        const categoryId = parseInt(req.body.categoryId);
-        const { title, content, imageurl } = req.body;
+        const { title, content, imageurl, categoryId } = req.body;
 
         try {
-            const blog = await prisma.blog.update({
+            // Find Blog
+            const blog = await prisma.blog.findUnique({
                 where: { id: parseInt(id) },
+            });
+
+            // Delete Old Image if Upload New Image
+            if (blog) {
+                if (blog.imageurl) {
+                    const filePath = path.join(
+                        `${UPLOAD_DIR}images/blog`,
+                        path.basename(blog.imageurl),
+                    );
+                    await fs.remove(filePath);
+                }
+            }
+
+            // Update Blog
+            const newBlog = await prisma.blog.update({
+                where: { id: blog?.id },
                 data: {
                     title,
                     content,
@@ -100,7 +116,7 @@ export class AdminBlogController {
                 },
             });
 
-            return res.status(200).json(blog);
+            return res.status(200).json(newBlog);
         } catch (error) {
             const prismaError = error as CustomError;
             if (prismaError.code === 'P2025') {

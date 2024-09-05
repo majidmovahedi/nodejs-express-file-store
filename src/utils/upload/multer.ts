@@ -5,6 +5,17 @@ import { NextFunction } from 'express';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR as string;
 
+const allowedMimeTypes = ['image/png', 'image/jpeg'];
+
+const fileFilter: multer.Options['fileFilter'] = (req, file, cb) => {
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        // cb(new Error('Invalid file type. Only PNG and JPEG are allowed.'), false);
+        cb(null, false);
+    }
+};
+
 // Storage configuration for blog images
 const blogImageStorage: StorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -31,33 +42,32 @@ const productImageStorage: StorageEngine = multer.diskStorage({
     },
 });
 
-// Storage configuration for product files
-const productFileStorage: StorageEngine = multer.diskStorage({
-    destination: (req, file, cb) => {
-        if (!fs.existsSync(`${UPLOAD_DIR}products`)) {
-            fs.mkdirSync(`${UPLOAD_DIR}products`, { recursive: true });
-        }
-        cb(null, `${UPLOAD_DIR}products`);
+export const blogImageUpload = multer({
+    storage: blogImageStorage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
     },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+});
+export const productImageUpload = multer({
+    storage: productImageStorage,
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 5 * 1024 * 1024, // 5MB limit
     },
 });
 
-export const blogImageUpload = multer({ storage: blogImageStorage });
-export const productImageUpload = multer({ storage: productImageStorage });
-// export const productFileUpload = multer({ storage: productFileStorage });
-
-// export const blogImageUpload = multer({
-//     storage: blogImageStorage,
-//     limits: {
-//       fileSize: 5000000 // 5000000 Bytes = 5 MB
+// // Storage configuration for product files
+// const productFileStorage: StorageEngine = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         if (!fs.existsSync(`${UPLOAD_DIR}products`)) {
+//             fs.mkdirSync(`${UPLOAD_DIR}products`, { recursive: true });
+//         }
+//         cb(null, `${UPLOAD_DIR}products`);
 //     },
-//     fileFilter(req, file, cb) {
-//       if (!file.originalname.match(/\.(png|jpg)$/)) {
-//          // upload only png and jpg format
-//          return cb(new Error('Please upload a Image'))
-//        }
-//      cb(null, true)
-//   }
-//  });
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     },
+// });
+
+// export const productFileUpload = multer({ storage: productFileStorage });

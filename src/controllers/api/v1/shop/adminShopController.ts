@@ -115,7 +115,7 @@ export class AdminShopController {
             }
             // Update Product
             const newProduct = await prisma.product.update({
-                where: { id: parseInt(id) },
+                where: { id: product?.id },
                 data: {
                     title,
                     content,
