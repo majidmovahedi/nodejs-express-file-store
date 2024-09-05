@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { CustomError } from 'types';
 import path from 'path';
@@ -34,7 +34,7 @@ export class AdminBlogController {
         }
     }
 
-    async createBlog(req: Request, res: Response) {
+    async createBlog(req: Request, res: Response, next: NextFunction) {
         const createdAt = new Date();
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);

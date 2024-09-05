@@ -1,21 +1,18 @@
-// import { Request, Response, NextFunction } from 'express';
-// import { productImageUpload, productFileUpload } from '@utils/upload/multer';
+// import { NextFunction, Request, Response } from 'express';
 
-// export const uploadMiddleware = (
-//     req: Request,
-//     res: Response,
-//     next: NextFunction,
-// ) => {
-//     const productImage = productImageUpload.single('imageurl');
-//     const productFile = productFileUpload.single('fileurl');
+// import { blogImageUpload } from "@utils/upload/multer";
+// import { MulterError } from "multer";
 
-//     productImage(req, res, (err) => {
-//         if (err) return next(err);
-
-//         productFile(req, res, (err) => {
-//             if (err) return next(err);
-
-//             next();
-//         });
-//     });
-// };
+// export const uploadMiddlware = blogImageUpload(req, res, (err: MulterError | any) => {
+//     if (err instanceof MulterError) {
+//       // Handle Multer-specific errors
+//       if (err.code === 'LIMIT_FILE_SIZE') {
+//         return res.status(413).json({ error: 'File size exceeds limit' });
+//       }
+//       // Handle other Multer errors
+//       return res.status(400).json({ error: 'A Multer error occurred during upload' });
+//     } else if (err) {
+//       // Handle non-Multer errors
+//       return res.status(500).json({ error: 'An unknown error occurred' });
+//     }
+// });

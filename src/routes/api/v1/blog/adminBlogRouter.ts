@@ -43,7 +43,7 @@ router.get(
 );
 router.post(
     '/',
-    blogImageUpload.single('imageurl'),
+    blogImageUpload,
     blogSchema,
     validateRequestSchema,
     adminBlogController.createBlog,

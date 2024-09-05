@@ -48,7 +48,8 @@ export const blogImageUpload = multer({
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB limit
     },
-});
+}).single('imageurl');
+
 export const productImageUpload = multer({
     storage: productImageStorage,
     fileFilter: fileFilter,
