@@ -139,7 +139,9 @@ export const productSchema = [
         .withMessage('Content Cant be less Than 20 Characters!'),
     body('categoryId').notEmpty().withMessage('Category ID Cant be Null!'),
     body('price').notEmpty().withMessage('Price Cant be Null!'),
-    body('price').isNumeric().withMessage('Please Enter The Price Correctly!'),
+    body('price')
+        .isFloat({ gt: 0 })
+        .withMessage('Please Enter The Price Correctly!'),
 ];
 
 export const productUpdateSchema = [
@@ -161,6 +163,6 @@ export const productUpdateSchema = [
     body('price').optional().notEmpty().withMessage('Price Cant be Null!'),
     body('price')
         .optional()
-        .isNumeric()
+        .isFloat({ gt: 0 })
         .withMessage('Please Enter The Price Correctly!'),
 ];

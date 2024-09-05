@@ -92,18 +92,28 @@ export class AdminShopController {
         const { id } = req.params;
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
-        const categoryId = parseInt(req.body.categoryId);
-        const price = parseFloat(req.body.price);
-        const { title, content, fileurl, imageurl } = req.body;
-        // const productImage = req.file;
-        // const imageurl = productImage?.path.replace(/\\/g, '/') || '';
+        // const categoryId = parseInt(req.body.categoryId);
+        // const price = parseFloat(req.body.price);
+        const { title, content, fileurl, categoryId, price } = req.body;
+        const productImage = req.file;
+        const imageurl = productImage?.path.replace(/\\/g, '/') || '';
         try {
+            // Find Product
+            const product = await prisma.product.findUnique({
+                where: { id: parseInt(id) },
+            });
 
-
-            // const product = await prisma.product.findUnique({
-            //     where: { id: parseInt(id) },
-            // });
-
+            // Delete Old Image if Upload New Image
+            if (product) {
+                if (product.imageurl) {
+                    const filePath = path.join(
+                        `${UPLOAD_DIR}images/product`,
+                        path.basename(product.imageurl),
+                    );
+                    await fs.remove(filePath);
+                }
+            }
+            // Update Product
             const newProduct = await prisma.product.update({
                 where: { id: parseInt(id) },
                 data: {
@@ -117,19 +127,6 @@ export class AdminShopController {
                     authorId,
                 },
             });
-
-            // if (product) {
-            //     if (product.imageurl) {
-            //         const filePath = path.join(
-            //             `${UPLOAD_DIR}images/product`,
-            //             path.basename(product.imageurl),
-            //         );
-            //         await fs.remove(filePath);
-            //     }
-            // }
-
-
-
 
             return res.status(200).json(newProduct);
         } catch (error) {
