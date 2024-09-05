@@ -50,6 +50,7 @@ router.post(
 );
 router.put(
     '/:id',
+    blogImageUpload,
     paramSchema,
     blogUpdateSchema,
     validateRequestSchema,

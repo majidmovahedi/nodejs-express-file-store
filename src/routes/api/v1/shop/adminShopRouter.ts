@@ -43,15 +43,15 @@ router.get(
 );
 router.post(
     '/',
-    // productFileUpload.single('fileurl'),
-    productImageUpload.single('imageurl'),
+    // productFileUpload,
+    productImageUpload,
     productSchema,
     validateRequestSchema,
     adminShopController.createProduct,
 );
 router.put(
     '/:id',
-    productImageUpload.single('imageurl'),
+    productImageUpload,
     paramSchema,
     productUpdateSchema,
     validateRequestSchema,

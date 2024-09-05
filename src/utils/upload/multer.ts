@@ -42,6 +42,19 @@ const productImageStorage: StorageEngine = multer.diskStorage({
     },
 });
 
+// // Storage configuration for product files
+// const productFileStorage: StorageEngine = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         if (!fs.existsSync(`${UPLOAD_DIR}products`)) {
+//             fs.mkdirSync(`${UPLOAD_DIR}products`, { recursive: true });
+//         }
+//         cb(null, `${UPLOAD_DIR}products`);
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, Date.now() + path.extname(file.originalname));
+//     },
+// });
+
 export const blogImageUpload = multer({
     storage: blogImageStorage,
     fileFilter: fileFilter,
@@ -56,19 +69,6 @@ export const productImageUpload = multer({
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB limit
     },
-});
+}).single('imageurl');
 
-// // Storage configuration for product files
-// const productFileStorage: StorageEngine = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         if (!fs.existsSync(`${UPLOAD_DIR}products`)) {
-//             fs.mkdirSync(`${UPLOAD_DIR}products`, { recursive: true });
-//         }
-//         cb(null, `${UPLOAD_DIR}products`);
-//     },
-//     filename: (req, file, cb) => {
-//         cb(null, Date.now() + path.extname(file.originalname));
-//     },
-// });
-
-// export const productFileUpload = multer({ storage: productFileStorage });
+// export const productFileUpload = multer({ storage: productFileStorage }).single('fileurl');
