@@ -14,6 +14,9 @@ const router = Router();
 // User Category Router
 router.get('/category', userShopController.allCategory);
 
+// User Search
+router.get('/search', userShopController.search);
+
 // User Blog Router
 router.get('/', userShopController.allProduct);
 router.get(

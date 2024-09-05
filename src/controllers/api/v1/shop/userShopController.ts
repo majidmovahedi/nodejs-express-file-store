@@ -31,6 +31,32 @@ export class UserShopController {
         }
     }
 
+    async search(req: Request, res: Response) {
+        const query = req.query.q as string;
+
+        if (!query) {
+            return res
+                .status(400)
+                .json({ error: 'Query parameter "q" is required' });
+        }
+
+        try {
+            const results = await prisma.product.findMany({
+                where: {
+                    OR: [
+                        { title: { contains: query, mode: 'insensitive' } },
+                        { content: { contains: query, mode: 'insensitive' } },
+                    ],
+                },
+            });
+
+            res.json(results);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+
     // async payment(req: Request, res: Response) {
     //     const API_KEY = 'QGVARFN-YNKMMSD-P5K26PM-NF2CNG0';
     //     const { amount, currency, order_id } = req.body;
