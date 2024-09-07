@@ -5,16 +5,44 @@
     "title": "REST API",
     "description": ""
   },
-
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
   "tags": [
     {
-      "name": "",
-      "description": ""
+      "name": "Blog",
+      "description": "Operations related to blogs"
+    },
+    {
+      "name": "Admin Blog",
+      "description": "Admin operations related to blogs"
+    },
+    {
+      "name": "Shop",
+      "description": "Operations related to the shop"
+    },
+    {
+      "name": "Admin Shop",
+      "description": "Admin operations related to the shop"
+    },
+    {
+      "name": "User",
+      "description": "Operations related to user management"
+    },
+    {
+      "name": "Admin User",
+      "description": "Admin operations related to user management"
     }
   ],
   "paths": {
     "/api/v1/blog/category": {
       "get": {
+        "tags": ["Blog"],
         "description": "",
         "responses": {
           "default": {
@@ -25,6 +53,7 @@
     },
     "/api/v1/blog/": {
       "get": {
+        "tags": ["Blog"],
         "description": "",
         "responses": {
           "default": {
@@ -35,6 +64,7 @@
     },
     "/api/v1/blog/{id}": {
       "get": {
+        "tags": ["Blog"],
         "description": "",
         "parameters": [
           {
@@ -55,6 +85,7 @@
     },
     "/api/v1/admin/blog/category": {
       "get": {
+        "tags": ["Admin Blog"],
         "description": "",
         "security": [
           {
@@ -68,7 +99,13 @@
         }
       },
       "post": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -81,7 +118,13 @@
     },
     "/api/v1/admin/blog/category/{id}": {
       "put": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -102,6 +145,12 @@
         }
       },
       "delete": {
+        "tags": ["Admin Blog"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "description": "",
         "parameters": [
           {
@@ -122,7 +171,13 @@
     },
     "/api/v1/admin/blog/": {
       "get": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -130,7 +185,13 @@
         }
       },
       "post": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -143,7 +204,13 @@
     },
     "/api/v1/admin/blog/{id}": {
       "get": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -164,7 +231,13 @@
         }
       },
       "put": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -185,7 +258,13 @@
         }
       },
       "delete": {
+        "tags": ["Admin Blog"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -205,6 +284,7 @@
     },
     "/api/v1/shop/category": {
       "get": {
+        "tags": ["Shop"],
         "description": "",
         "responses": {
           "default": {
@@ -215,6 +295,7 @@
     },
     "/api/v1/shop/search": {
       "get": {
+        "tags": ["Shop"],
         "description": "",
         "responses": {
           "default": {
@@ -225,6 +306,7 @@
     },
     "/api/v1/shop/": {
       "get": {
+        "tags": ["Shop"],
         "description": "",
         "responses": {
           "default": {
@@ -235,6 +317,7 @@
     },
     "/api/v1/shop/{id}": {
       "get": {
+        "tags": ["Shop"],
         "description": "",
         "parameters": [
           {
@@ -255,6 +338,7 @@
     },
     "/api/v1/admin/shop/category": {
       "get": {
+        "tags": ["Admin Shop"],
         "description": "",
         "responses": {
           "401": {
@@ -263,6 +347,7 @@
         }
       },
       "post": {
+        "tags": ["Admin Shop"],
         "description": "",
         "responses": {
           "401": {
@@ -276,6 +361,7 @@
     },
     "/api/v1/admin/shop/category/{id}": {
       "put": {
+        "tags": ["Admin Shop"],
         "description": "",
         "parameters": [
           {
@@ -297,6 +383,7 @@
         }
       },
       "delete": {
+        "tags": ["Admin Shop"],
         "description": "",
         "parameters": [
           {
@@ -317,6 +404,7 @@
     },
     "/api/v1/admin/shop/": {
       "get": {
+        "tags": ["Admin Shop"],
         "description": "",
         "responses": {
           "401": {
@@ -325,6 +413,7 @@
         }
       },
       "post": {
+        "tags": ["Admin Shop"],
         "description": "",
         "responses": {
           "401": {
@@ -338,6 +427,7 @@
     },
     "/api/v1/admin/shop/{id}": {
       "get": {
+        "tags": ["Admin Shop"],
         "description": "",
         "parameters": [
           {
@@ -359,6 +449,7 @@
         }
       },
       "put": {
+        "tags": ["Admin Shop"],
         "description": "",
         "parameters": [
           {
@@ -380,6 +471,7 @@
         }
       },
       "delete": {
+        "tags": ["Admin Shop"],
         "description": "",
         "parameters": [
           {
@@ -400,6 +492,7 @@
     },
     "/api/v1/user/": {
       "get": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -419,6 +512,7 @@
     },
     "/api/v1/user/register": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -429,6 +523,7 @@
     },
     "/api/v1/user/resend": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -439,6 +534,7 @@
     },
     "/api/v1/user/verify": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -449,6 +545,7 @@
     },
     "/api/v1/user/forget-password": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -459,6 +556,7 @@
     },
     "/api/v1/user/new-password": {
       "put": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -469,6 +567,7 @@
     },
     "/api/v1/user/delete": {
       "delete": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -488,6 +587,7 @@
     },
     "/api/v1/user/login": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "422": {
@@ -498,6 +598,7 @@
     },
     "/api/v1/user/change-password": {
       "put": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -520,6 +621,7 @@
     },
     "/api/v1/user/update": {
       "put": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -542,6 +644,7 @@
     },
     "/api/v1/admin/user/": {
       "get": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -561,6 +664,7 @@
     },
     "/api/v1/admin/user/{id}": {
       "get": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -591,6 +695,7 @@
     },
     "/api/v1/admin/user/register": {
       "post": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -613,6 +718,7 @@
     },
     "/api/v1/admin/user/forget-password": {
       "post": {
+        "tags": ["Admin User"],
         "description": "",
         "responses": {
           "422": {
@@ -623,6 +729,7 @@
     },
     "/api/v1/admin/user/new-password": {
       "put": {
+        "tags": ["Admin User"],
         "description": "",
         "responses": {
           "422": {
@@ -633,6 +740,7 @@
     },
     "/api/v1/admin/user/delete/{id}": {
       "delete": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -663,6 +771,7 @@
     },
     "/api/v1/admin/user/login": {
       "post": {
+        "tags": ["Admin User"],
         "description": "",
         "responses": {
           "422": {
@@ -673,6 +782,7 @@
     },
     "/api/v1/admin/user/change-password/{id}": {
       "put": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -703,6 +813,7 @@
     },
     "/api/v1/admin/user/update/{id}": {
       "put": {
+        "tags": ["Admin User"],
         "description": "",
         "parameters": [
           {
@@ -729,14 +840,6 @@
             "description": "Unprocessable Entity"
           }
         }
-      }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }
