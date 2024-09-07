@@ -152,6 +152,23 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the blog category"
+                  }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -209,6 +226,36 @@
             "bearerAuth": []
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the blog"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Content of the blog"
+                  },
+                  "categoryId": {
+                    "type": "integer",
+                    "description": "blog category ID"
+                  },
+                  "imageurl": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "blog image"
+                  }
+                },
+                "required": ["title", "content", "categoryId", "imageurl"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -265,6 +312,35 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the blog"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Content of the blog"
+                  },
+                  "categoryId": {
+                    "type": "integer",
+                    "description": "blog category ID"
+                  },
+                  "imageurl": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "blog image"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -357,6 +433,11 @@
       "get": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -366,6 +447,28 @@
       "post": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the shop category"
+                  }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -380,6 +483,11 @@
       "put": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -390,6 +498,23 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the shop category"
+                  }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -402,6 +527,11 @@
       "delete": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -423,6 +553,11 @@
       "get": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -432,6 +567,11 @@
       "post": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -446,6 +586,11 @@
       "get": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -468,6 +613,11 @@
       "put": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -490,6 +640,11 @@
       "delete": {
         "tags": ["Admin Shop"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -511,6 +666,11 @@
       "get": {
         "tags": ["User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -531,6 +691,31 @@
       "post": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "your name and family"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "your password"
+                  }
+                },
+                "required": ["title", "email", "password"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -542,6 +727,23 @@
       "post": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -553,6 +755,27 @@
       "post": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  },
+                  "code": {
+                    "type": "integer",
+                    "description": "Code sent to email"
+                  }
+                },
+                "required": ["email", "code"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -564,6 +787,23 @@
       "post": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -575,6 +815,31 @@
       "put": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "enter your password"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Code sent to email"
+                  }
+                },
+                "required": ["email", "password", "code"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -586,6 +851,11 @@
       "delete": {
         "tags": ["User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -606,6 +876,27 @@
       "post": {
         "tags": ["User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "your password"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -617,6 +908,11 @@
       "put": {
         "tags": ["User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -626,6 +922,31 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "description": "old password"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "description": "new password"
+                  },
+                  "repeatNewPassword": {
+                    "type": "string",
+                    "description": "repeat new password"
+                  }
+                },
+                "required": ["password", "newPassword", "repeatNewPassword"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -640,6 +961,11 @@
       "put": {
         "tags": ["User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -649,6 +975,23 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "your name and family"
+                  }
+                },
+                "required": ["fullname"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -663,6 +1006,11 @@
       "get": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -683,6 +1031,11 @@
       "get": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -714,6 +1067,11 @@
       "post": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "Authorization",
@@ -723,6 +1081,45 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "enter name and family"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "enter email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "enter password"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "description": "account activation"
+                  },
+                  "type": {
+                    "type": "boolean",
+                    "description": "admin type"
+                  }
+                },
+                "required": [
+                  "fullname",
+                  "email",
+                  "password",
+                  "is_active",
+                  "type"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -737,6 +1134,23 @@
       "post": {
         "tags": ["Admin User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  }
+                },
+                "required": ["email"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -748,6 +1162,31 @@
       "put": {
         "tags": ["Admin User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "enter your password"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Code sent to email"
+                  }
+                },
+                "required": ["email", "password", "code"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -759,6 +1198,11 @@
       "delete": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -776,6 +1220,31 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "enter your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "enter your password"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Code sent to email"
+                  }
+                },
+                "required": ["email", "password", "code"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -790,6 +1259,27 @@
       "post": {
         "tags": ["Admin User"],
         "description": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "your email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "your password"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
         "responses": {
           "422": {
             "description": "Unprocessable Entity"
@@ -801,6 +1291,11 @@
       "put": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -818,6 +1313,27 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string",
+                    "description": "new password"
+                  },
+                  "repeatNewPassword": {
+                    "type": "string",
+                    "description": "repeat new password"
+                  }
+                },
+                "required": ["newPassword", "repeatNewPassword"]
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
@@ -832,6 +1348,11 @@
       "put": {
         "tags": ["Admin User"],
         "description": "",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "id",
@@ -849,6 +1370,34 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fullname": {
+                    "type": "string",
+                    "description": "enter name and family"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "enter email"
+                  },
+                  "is_active": {
+                    "type": "boolean",
+                    "description": "account activation"
+                  },
+                  "type": {
+                    "type": "boolean",
+                    "description": "admin type"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "401": {
             "description": "Unauthorized"
