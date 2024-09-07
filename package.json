@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "nodemon server.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "swagger": "ts-node swagger.ts"
   },
   "author": "MajidMovahedi",
   "license": "ISC",
@@ -43,6 +44,7 @@
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
     "prisma": "^5.17.0",
+    "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "typescript": "^5.5.4"
