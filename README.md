@@ -1,6 +1,6 @@
 # File Store API
 
-This project is a file store API developed using Express and TypeScript, with PostgreSQL and Prisma for database management. It provides functionality for managing products, users, and blog posts, including features for purchasing and downloading files. The API also includes search capabilities and documentation via Swagger.
+This project is an API for file storage developed using Express and TypeScript, with PostgreSQL and Prisma for database management. It offers a range of functionalities, including management of products, users, and blog posts, as well as features for purchasing and downloading files. Additionally, the API includes search capabilities for finding products and blog posts, and documentation is available via Swagger.
 
 ## Features
 
