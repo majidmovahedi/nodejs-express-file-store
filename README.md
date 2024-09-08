@@ -8,8 +8,8 @@ This project is a file store API developed using Express and TypeScript, with Po
 - **User System:** User registration and login with email.
 - **Payment and Purchase:** Buy products through a payment gateway and receive download links.
 - **Blog:** Manage and view blog posts.
-- **Categories:** Manage and view product categories.
-- **Search:** Search functionality for products and blog posts.
+- **Categories:** Manage and view product & blog categories.
+- **Search:** Search functionality for products.
 - **API Documentation:** API documentation available through Swagger.
 - **File Upload:** File uploads handled with Multer.
 - **Validation:** Input validation using express-validator.
