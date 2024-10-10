@@ -96,7 +96,7 @@ export class AdminBlogController {
             if (blog) {
                 if (blog.imageurl) {
                     const filePath = path.join(
-                        `${UPLOAD_DIR}images/blog`,
+                        `${UPLOAD_DIR}images`,
                         path.basename(blog.imageurl),
                     );
                     await fs.remove(filePath);
@@ -150,7 +150,7 @@ export class AdminBlogController {
             if (blog) {
                 if (blog.imageurl) {
                     const filePath = path.join(
-                        `${UPLOAD_DIR}images/blog`,
+                        `${UPLOAD_DIR}images`,
                         path.basename(blog.imageurl),
                     );
                     await fs.remove(filePath);

@@ -101,7 +101,7 @@ export class AdminShopController {
             if (product) {
                 if (product.imageurl) {
                     const filePath = path.join(
-                        `${UPLOAD_DIR}images/product`,
+                        `${UPLOAD_DIR}images`,
                         path.basename(product.imageurl),
                     );
                     await fs.remove(filePath);
@@ -156,7 +156,7 @@ export class AdminShopController {
             if (product) {
                 if (product.imageurl) {
                     const filePath = path.join(
-                        `${UPLOAD_DIR}images/product`,
+                        `${UPLOAD_DIR}images`,
                         path.basename(product.imageurl),
                     );
                     await fs.remove(filePath);
