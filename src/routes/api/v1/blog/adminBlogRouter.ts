@@ -8,7 +8,7 @@ import {
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
-import { imageUpload } from '@utils/upload/multer';
+import { imageUpload } from '@utils/upload/multerImage';
 
 const adminBlogController = new AdminBlogController();
 

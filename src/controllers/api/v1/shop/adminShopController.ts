@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+
 import { CustomError } from 'types';
 import path from 'path';
 import fs from 'fs-extra';
+import { s3Client } from '@utils/upload/multerFile';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR;
 
@@ -182,6 +185,43 @@ export class AdminShopController {
                     details: prismaError.message,
                 });
             }
+        }
+    }
+
+    //Upload file Product
+
+    async uploadFileProduct(req: Request, res: Response) {
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        const file = req.file;
+        const bucketName = process.env.LIARA_BUCKET_NAME as string;
+        const fileKey = `uploads/${Date.now()}_${file.originalname}`; // Unique file key
+
+        // Prepare params for S3 upload
+        const uploadParams = {
+            Bucket: bucketName,
+            Key: fileKey,
+            Body: file.buffer, // Use the buffer for file upload
+            ContentType: file.mimetype, // Set MIME type
+        };
+
+        try {
+            // Upload file to S3 bucket
+            const result = await s3Client.send(
+                new PutObjectCommand(uploadParams),
+            );
+            console.log('File uploaded successfully:', result);
+
+            // Send success response
+            res.status(200).json({
+                message: 'File uploaded successfully',
+                //   fileUrl: `${process.env.LIARA_ENDPOINT}/${bucketName}/${fileKey}`, // Construct file URL
+            });
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            res.status(500).json({ message: 'Error uploading file', error });
         }
     }
 

@@ -8,7 +8,8 @@ import {
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
-import { imageUpload } from '@utils/upload/multer';
+import { imageUpload } from '@utils/upload/multerImage';
+import { uploadFile } from '@utils/upload/multerFile';
 
 const adminShopController = new AdminShopController();
 
@@ -32,6 +33,9 @@ router.put(
     adminShopController.updateCategory,
 );
 router.delete('/category/:id', paramSchema, adminShopController.deleteCategory);
+
+// Upload File
+router.post('/upload', uploadFile, adminShopController.uploadFileProduct);
 
 // Admin Shop Router
 router.get('/', adminShopController.allProduct);
