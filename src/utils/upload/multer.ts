@@ -15,21 +15,21 @@ const fileFilter: multer.Options['fileFilter'] = (req, file, cb) => {
     }
 };
 
-// Storage configuration for blog images
-const blogImageStorage: StorageEngine = multer.diskStorage({
+// Storage configuration for images
+const imageStorage: StorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
-        if (!fs.existsSync(`${UPLOAD_DIR}images/blog`)) {
-            fs.mkdirSync(`${UPLOAD_DIR}images/blog`, { recursive: true });
+        if (!fs.existsSync(`${UPLOAD_DIR}images`)) {
+            fs.mkdirSync(`${UPLOAD_DIR}images`, { recursive: true });
         }
-        cb(null, `${UPLOAD_DIR}images/blog`);
+        cb(null, `${UPLOAD_DIR}images`);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
     },
 });
 
-export const blogImageUpload = multer({
-    storage: blogImageStorage,
+export const imageUpload = multer({
+    storage: imageStorage,
     fileFilter: fileFilter,
     limits: {
         fileSize: 5 * 1024 * 1024, // 5MB limit
