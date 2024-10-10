@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import { CustomError } from 'types';
 import path from 'path';
@@ -203,8 +204,8 @@ export class AdminShopController {
         const uploadParams = {
             Bucket: bucketName,
             Key: fileKey,
-            Body: file.buffer, // Use the buffer for file upload
-            ContentType: file.mimetype, // Set MIME type
+            Body: file.buffer,
+            ContentType: file.mimetype,
         };
 
         try {
@@ -212,12 +213,13 @@ export class AdminShopController {
             const result = await s3Client.send(
                 new PutObjectCommand(uploadParams),
             );
-            console.log('File uploaded successfully:', result);
+            const command = new GetObjectCommand(uploadParams);
+            const signedUrl = await getSignedUrl(s3Client, command);
 
             // Send success response
             res.status(200).json({
                 message: 'File uploaded successfully',
-                //   fileUrl: `${process.env.LIARA_ENDPOINT}/${bucketName}/${fileKey}`, // Construct file URL
+                fileUrl: signedUrl, // Construct file URL
             });
         } catch (error) {
             console.error('Error uploading file:', error);
