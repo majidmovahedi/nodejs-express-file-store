@@ -46,7 +46,11 @@ export class AdminBlogController {
 
         try {
             if (!blogImage) {
-                return res.status(400).json('No image uploaded.');
+                return res
+                    .status(400)
+                    .json(
+                        'Invalid file type or no file provided. Only JPEG and PNG images are allowed.',
+                    );
             }
 
             const result = await prisma.blog.create({
