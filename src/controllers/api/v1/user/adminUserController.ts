@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { transporter } from '@utils/auth/sendEmails';
 import { getRandomInt } from '@utils/auth/codeGenerator';
 import jwt from 'jsonwebtoken';
