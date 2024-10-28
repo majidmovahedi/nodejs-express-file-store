@@ -16,7 +16,7 @@ model User {
   blog      Blog[]
   product   Product[]
   otp       Otp[]
-  transaction Transaction[]
+  purchase Purchase[]
   type	    Boolean  @default(false)
   is_active	    Boolean  @default(false)
 }
@@ -71,10 +71,10 @@ model Product {
   author      User     @relation(fields: [authorId], references: [id])
   category    ProductCategory @relation(fields: [categoryId], references: [id])
 
-  transaction Transaction[]
+  purchase Purchase[]
 }
 
-model Transaction {
+model Purchase {
   id          Int         @id @default(autoincrement())
   userId      Int
   productId   Int
@@ -88,10 +88,10 @@ model Transaction {
 
 model Payment {
   id          Int         @id @default(autoincrement())
-  transactionId Int
+  purchaseId Int
   amount      Float
   status      String
   paymentMethod String
   paymentDate DateTime    @default(now())
-  transaction Transaction @relation(fields: [transactionId], references: [id])
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
 }

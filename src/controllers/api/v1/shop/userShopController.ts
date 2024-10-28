@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-// import createPaymentLink from '@utils/payment/pay.ir';
 import axios from 'axios';
+
+const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID as string;
+const CALLBACK_URL = process.env.CALLBACK_URL as string;
+const ZARINPAL_API_BASE = process.env.ZARINPAL_API_BASE as string;
 
 const prisma = new PrismaClient();
 
@@ -22,7 +25,7 @@ export class UserShopController {
             });
 
             if (!product) {
-                return res.status(520).json('This Product is Not Exist!');
+                return res.status(404).json('This Product is Not Exist!');
             }
             return res.status(200).json(product);
         } catch (error) {
@@ -57,45 +60,48 @@ export class UserShopController {
         }
     }
 
-    // async payment(req: Request, res: Response) {
-    //     const API_KEY = 'QGVARFN-YNKMMSD-P5K26PM-NF2CNG0';
-    //     const { amount, currency, order_id } = req.body;
+    async payment(req: Request, res: Response) {
+        const userId = Number(req.user?.id);
+        const { productId } = req.body;
+        try {
+            const product = await prisma.product.findUnique({
+                where: { id: parseInt(productId) },
+            });
 
-    //     try {
-    //         const response = await axios.post(
-    //           'https://api.coingate.com/v2/orders',
-    //           {
-    //             price_amount: amount,
-    //             price_currency: currency,
-    //             order_id: order_id,
-    //             order_description: 'Description of the product',
-    //             success_url: 'https://majidmovahedi.ir',
-    //             cancel_url: 'https://your-cancel-url.com',
-    //           },
-    //           {
-    //             headers: {
-    //               'Content-Type': 'application/json',
-    //               'Authorization': `Bearer ${API_KEY}`,
-    //             }
-    //           }
-    //         );
+            if (!product) {
+                return res.status(404).json('This Product is Not Exist!');
+            }
 
-    //         res.json(response.data);
-    //       } catch (error) {
-    //         console.error(error);
-    //         res.status(500).send('Error creating payment');
-    //       }
+            const response = await axios.post(
+                `${ZARINPAL_API_BASE}request.json`,
+                {
+                    MerchantID: ZARINPAL_MERCHANT_ID,
+                    Amount: product.price,
+                    CallbackURL: CALLBACK_URL,
+                },
+            );
+
+            const { Authority, Status } = response.data;
+
+            console.log(Status.code);
+            //   if (Status === 100) {
+            //     const paymentUrl = `https://sandbox.zarinpal.com/pg/StartPay/${Authority}`;
+            //     res.json({ paymentUrl });
+            //   } else {
+            //     res.status(400).json({ error: 'Payment request failed' });
+            //   }
+
+            console.log('product log =>' + product.id);
+            console.log('user log =>' + userId);
+        } catch (error) {
+            console.error('Error during user payment:', error);
+            return res.status(500).json('An unexpected error occurred.');
+        }
+    }
+
+    // async verifyPayment (req: Request, res: Response){
+
     // }
-
-    // async payment(req: Request, res: Response) {
-    //     const { amount } = req.body;
-    // }
-
-    // async verify(req: Request, res: Response) {
-    //     const { token, ref_id } = req.query;
-    // }
-
-    // User Category CRUD
 
     async allCategory(req: Request, res: Response) {
         const categories = await prisma.productCategory.findMany();

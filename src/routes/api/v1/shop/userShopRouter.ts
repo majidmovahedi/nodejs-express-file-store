@@ -25,7 +25,7 @@ router.get(
     validateRequestSchema,
     userShopController.singleProduct,
 );
-// router.post('/payment', authMiddleware, userShopController.payment);
-// router.post('/payment', authMiddleware, userShopController.payment);
-// router.get('/payment/callback', authMiddleware, userShopController.verify);
+router.post('/payment', authMiddleware, userShopController.payment);
+// router.post('/verify', authMiddleware, userShopController.verifyPayment);
+
 export default router;
