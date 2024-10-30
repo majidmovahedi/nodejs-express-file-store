@@ -182,16 +182,15 @@ export class UserController {
                 where: { id: userId },
             });
 
-            // Delete User's Blog
-            await prisma.blog.deleteMany({
-                where: { authorId: user?.id },
+            // Delete User's Payment
+            await prisma.payment.deleteMany({
+                where: { userId: user?.id },
             });
 
-            // Delete User's Products
-            // Uncomment and implement as needed
-            // await prisma.product.deleteMany({
-            //     where: { authorId: user?.id },
-            // });
+            // Delete User's Purchase
+            await prisma.purchase.deleteMany({
+                where: { userId: user?.id },
+            });
 
             // Delete Otp
             await prisma.otp.deleteMany({
