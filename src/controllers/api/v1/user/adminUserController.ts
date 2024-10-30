@@ -80,28 +80,51 @@ export class AdminUserController {
                 return res.status(404).json('This User does not exist!');
             }
 
-            // Delete User's Blog
-            await prisma.blog.deleteMany({
-                where: { authorId: user.id },
-            });
+            if (user.type == true) {
+                // Delete User's Blog
+                await prisma.blog.deleteMany({
+                    where: { authorId: user.id },
+                });
 
-            // Delete User's Products
-            // Uncomment and implement as needed
-            // await prisma.product.deleteMany({
-            //     where: { authorId: user.id },
-            // });
+                // Delete User's Product
+                await prisma.product.deleteMany({
+                    where: { authorId: user.id },
+                });
 
-            // Delete Otp
-            await prisma.otp.deleteMany({
-                where: { userId: user.id },
-            });
+                // Delete Otp
+                await prisma.otp.deleteMany({
+                    where: { userId: user.id },
+                });
 
-            // Delete User
-            await prisma.user.delete({
-                where: { id: user.id },
-            });
+                // Delete User
+                await prisma.user.delete({
+                    where: { id: user.id },
+                });
 
-            return res.status(200).json('User is deleted successfully.');
+                return res.status(200).json('User is deleted successfully.');
+            } else if (user.type == false) {
+                // Delete User's Payment
+                await prisma.payment.deleteMany({
+                    where: { userId: user?.id },
+                });
+
+                // Delete User's Purchase
+                await prisma.purchase.deleteMany({
+                    where: { userId: user?.id },
+                });
+
+                // Delete Otp
+                await prisma.otp.deleteMany({
+                    where: { userId: user?.id },
+                });
+
+                // Delete User
+                await prisma.user.delete({
+                    where: { id: user?.id },
+                });
+
+                return res.status(200).json('User is deleted successfully.');
+            }
         } catch (error) {
             console.error('Error deleting user:', error);
             return res
