@@ -26,6 +26,10 @@ router.get(
     userShopController.singleProduct,
 );
 router.post('/payment', authMiddleware, userShopController.payment);
-// router.post('/verify', authMiddleware, userShopController.verifyPayment);
+router.post(
+    '/payment/verify',
+    authMiddleware,
+    userShopController.verifyPayment,
+);
 
 export default router;
