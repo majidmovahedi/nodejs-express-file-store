@@ -1,6 +1,5 @@
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -8,90 +7,94 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   fullname  String
-  email     String   @unique
+  email     String     @unique
   password  String
   blog      Blog[]
   product   Product[]
   otp       Otp[]
-  purchase Purchase[]
-  type	    Boolean  @default(false)
-  is_active	    Boolean  @default(false)
+  purchase  Purchase[]
+  payment   Payment[]
+  type      Boolean    @default(false)
+  is_active Boolean    @default(false)
 }
 
 model Otp {
-  id        Int      @id @default(autoincrement())
-  code      Int
-  expire_time   DateTime    @default(now())
-  userId    Int
+  id          Int      @id @default(autoincrement())
+  code        Int
+  expire_time DateTime @default(now())
+  userId      Int
 
-  otp      User     @relation(fields: [userId], references: [id])
+  otp User @relation(fields: [userId], references: [id])
 }
 
 model BlogCategory {
-  id        Int      @id @default(autoincrement())
-  title     String   @unique
-  blog      Blog[]
+  id    Int    @id @default(autoincrement())
+  title String @unique
+  blog  Blog[]
 }
 
 model Blog {
-  id          Int      @id @default(autoincrement())
-  title       String
-  content     String
-  imageurl    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  authorId    Int
-  categoryId  Int
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  imageurl   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  authorId   Int
+  categoryId Int
 
-  author      User     @relation(fields: [authorId], references: [id])
-  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  author   User         @relation(fields: [authorId], references: [id])
+  category BlogCategory @relation(fields: [categoryId], references: [id])
 }
 
 model ProductCategory {
-  id        Int      @id @default(autoincrement())
-  title     String   @unique
-  product      Product[]
+  id      Int       @id @default(autoincrement())
+  title   String    @unique
+  product Product[]
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  title       String
-  content     String
-  imageurl    String
-  fileurl     String
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  authorId    Int
-  categoryId  Int
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  imageurl   String
+  fileurl    String
+  price      Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  authorId   Int
+  categoryId Int
 
-  author      User     @relation(fields: [authorId], references: [id])
-  category    ProductCategory @relation(fields: [categoryId], references: [id])
+  author   User            @relation(fields: [authorId], references: [id])
+  category ProductCategory @relation(fields: [categoryId], references: [id])
 
   purchase Purchase[]
 }
 
 model Purchase {
-  id          Int         @id @default(autoincrement())
-  userId      Int
-  productId   Int
-  amount      Float
-  status      String
-  createdAt   DateTime    @default(now())
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  productId Int
+  amount    Float
+  status    String
+  createdAt DateTime  @default(now())
   payment   Payment[]
-  user        User        @relation(fields: [userId], references: [id])
-  product     Product     @relation(fields: [productId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  product   Product   @relation(fields: [productId], references: [id])
 }
 
 model Payment {
-  id          Int         @id @default(autoincrement())
-  purchaseId Int
-  amount      Float
-  status      String
+  id            Int      @id @default(autoincrement())
+  purchaseId    Int
+  userId        Int
+  amount        Float
+  status        String
   paymentMethod String
-  paymentDate DateTime    @default(now())
-  purchase Purchase @relation(fields: [purchaseId], references: [id])
+  paymentDate   DateTime @default(now())
+  purchase      Purchase @relation(fields: [purchaseId], references: [id])
+  user          User     @relation(fields: [userId], references: [id])
 }
