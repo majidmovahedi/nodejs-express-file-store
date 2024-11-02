@@ -10,6 +10,7 @@ import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
 import { imageUpload } from '@utils/upload/multerImage';
 import { uploadFile } from '@utils/upload/multerFile';
+import { multerMiddleware } from '@middleware/multerMiddleware';
 
 const adminShopController = new AdminShopController();
 
@@ -47,14 +48,14 @@ router.get(
 );
 router.post(
     '/',
-    imageUpload,
+    multerMiddleware,
     productSchema,
     validateRequestSchema,
     adminShopController.createProduct,
 );
 router.put(
     '/:id',
-    imageUpload,
+    multerMiddleware,
     paramSchema,
     productUpdateSchema,
     validateRequestSchema,
