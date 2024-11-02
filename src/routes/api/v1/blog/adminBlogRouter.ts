@@ -8,7 +8,7 @@ import {
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
-import { imageUpload } from '@utils/upload/multerImage';
+import { multerMiddleware } from '@middleware/multerMiddleware';
 
 const adminBlogController = new AdminBlogController();
 
@@ -43,14 +43,14 @@ router.get(
 );
 router.post(
     '/',
-    imageUpload,
+    multerMiddleware,
     blogSchema,
     validateRequestSchema,
     adminBlogController.createBlog,
 );
 router.put(
     '/:id',
-    imageUpload,
+    multerMiddleware,
     paramSchema,
     blogUpdateSchema,
     validateRequestSchema,

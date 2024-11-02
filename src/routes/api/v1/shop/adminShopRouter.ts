@@ -8,7 +8,6 @@ import {
 } from '@utils/validation/validationSchema';
 import { validateRequestSchema } from '@utils/validation/validation';
 import { authMiddleware, adminMiddleware } from '@middleware/auth';
-import { imageUpload } from '@utils/upload/multerImage';
 import { uploadFile } from '@utils/upload/multerFile';
 import { multerMiddleware } from '@middleware/multerMiddleware';
 
