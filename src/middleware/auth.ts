@@ -42,7 +42,7 @@ export async function adminMiddleware(
             if (user?.type == true) {
                 next();
             } else {
-                res.status(401).json('You Dont Have Permission!');
+                res.status(403).json('You Dont Have Permission!');
             }
         });
 }

@@ -18,7 +18,7 @@ export class UserBlogController {
             });
 
             if (!blog) {
-                return res.status(520).json('This Blog is Not Exist!');
+                return res.status(404).json('This Blog is Not Exist!');
             }
             return res.status(200).json(blog);
         } catch (error) {

@@ -201,7 +201,7 @@ export class AdminBlogController {
         } catch (error) {
             const prismaError = error as CustomError;
             if (prismaError.code === 'P2002') {
-                return res.status(404).json({
+                return res.status(409).json({
                     message: 'This Category is Already Exists!',
                     code: prismaError.code,
                 });
@@ -234,7 +234,7 @@ export class AdminBlogController {
                     code: prismaError.code,
                 });
             } else if (prismaError.code === 'P2002') {
-                return res.status(404).json({
+                return res.status(409).json({
                     message: 'This Category is Already Exists!',
                     code: prismaError.code,
                 });

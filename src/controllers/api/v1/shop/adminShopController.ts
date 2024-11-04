@@ -2,14 +2,12 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-
 import { CustomError } from 'types';
 import path from 'path';
 import fs from 'fs-extra';
 import { s3Client } from '@utils/upload/multerFile';
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR;
-
 const prisma = new PrismaClient();
 
 export class AdminShopController {
@@ -29,7 +27,7 @@ export class AdminShopController {
             });
 
             if (!product) {
-                return res.status(520).json('This Product is Not Exist!');
+                return res.status(404).json('This Product is Not Exist!');
             }
             return res.status(200).json(product);
         } catch (error) {
@@ -94,8 +92,6 @@ export class AdminShopController {
         const { id } = req.params;
         const updatedAt = new Date();
         const authorId = Number(req.user?.id);
-        // const categoryId = parseInt(req.body.categoryId);
-        // const price = parseFloat(req.body.price);
         const { title, content, fileurl, categoryId, price } = req.body;
         const productImage = req.file;
         const imageurl = productImage?.path.replace(/\\/g, '/') || '';
@@ -193,7 +189,7 @@ export class AdminShopController {
         }
     }
 
-    //Upload file Product
+    // Upload file Product
 
     async uploadFileProduct(req: Request, res: Response) {
         if (!req.file) {
@@ -202,7 +198,7 @@ export class AdminShopController {
 
         const file = req.file;
         const bucketName = process.env.LIARA_BUCKET_NAME as string;
-        const fileKey = `uploads/${Date.now()}_${file.originalname}`; // Unique file key
+        const fileKey = `uploads/${Date.now()}_${file.originalname}`;
 
         // Prepare params for S3 upload
         const uploadParams = {
@@ -249,7 +245,7 @@ export class AdminShopController {
         } catch (error) {
             const prismaError = error as CustomError;
             if (prismaError.code === 'P2002') {
-                return res.status(404).json({
+                return res.status(409).json({
                     message: 'This Category is Already Exists!',
                     code: prismaError.code,
                 });
@@ -282,7 +278,7 @@ export class AdminShopController {
                     code: prismaError.code,
                 });
             } else if (prismaError.code === 'P2002') {
-                return res.status(404).json({
+                return res.status(409).json({
                     message: 'This Category is Already Exists!',
                     code: prismaError.code,
                 });

@@ -13,7 +13,7 @@ export class AdminUserController {
 
     async allUser(req: Request, res: Response) {
         const Users = await prisma.user.findMany();
-        return res.json(Users);
+        return res.status(200).json(Users);
     }
 
     async singleUser(req: Request, res: Response) {
@@ -25,7 +25,7 @@ export class AdminUserController {
             });
 
             if (!user) {
-                return res.status(520).json('This User is Not Exist!');
+                return res.status(404).json('This User is Not Exist!');
             }
             return res.status(200).json(user);
         } catch (error) {
@@ -147,7 +147,7 @@ export class AdminUserController {
             }
 
             if (!user.is_active) {
-                return res.json('Your account is deactive!');
+                return res.status(403).json('Your account is deactive!');
             }
 
             // Generate OTP Code and Save to OTP Table
@@ -192,7 +192,7 @@ export class AdminUserController {
             }
 
             if (!user.is_active) {
-                return res.json('Your account is deactive!');
+                return res.status(403).json('Your account is deactive!');
             }
 
             // Find the latest OTP for the user
@@ -220,7 +220,7 @@ export class AdminUserController {
 
                 return res.status(200).json('Your password has been changed!');
             } else {
-                return res.status(408).json('This code is invalid or expired!');
+                return res.status(410).json('This code is invalid or expired!');
             }
         } catch (error) {
             console.error('Error processing password reset:', error);
@@ -247,7 +247,7 @@ export class AdminUserController {
 
             // Check if the user is active
             if (!user.is_active) {
-                return res.json('Your account is deactivated!');
+                return res.status(403).json('Your account is deactivated!');
             }
 
             // Check password
@@ -293,7 +293,7 @@ export class AdminUserController {
                 data: { password: newPass },
             });
 
-            return res.status(200).json('Password changed');
+            return res.status(200).json('Your Password changed Successfully');
         } catch (error) {
             console.error('Error during change password:', error);
             return res

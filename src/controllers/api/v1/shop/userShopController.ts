@@ -56,7 +56,7 @@ export class UserShopController {
 
             res.json(results);
         } catch (error) {
-            console.error(error);
+            console.error('Error during search... ', error);
             res.status(500).json({ error: 'Internal server error' });
         }
     }

@@ -91,7 +91,7 @@ export class UserController {
             }
 
             if (user.is_active) {
-                return res.status(400).json('Your Account is Active!');
+                return res.status(403).json('Your Account is Active!');
             }
 
             // Add OTP Code to otp Table
@@ -131,11 +131,11 @@ export class UserController {
             });
 
             if (!user) {
-                return res.status(520).json('This User Does Not Exist!');
+                return res.status(404).json('This User Does Not Exist!');
             }
 
             if (user.is_active) {
-                return res.status(200).json('Your Account is Active!');
+                return res.status(403).json('Your Account is Active!');
             }
 
             // Find the latest OTP for the user
@@ -163,7 +163,7 @@ export class UserController {
 
                 return res.status(200).json('Your Account is Activated');
             } else {
-                return res.status(408).json('This Code is Invalid or Expired!');
+                return res.status(410).json('This Code is Invalid or Expired!');
             }
         } catch (error) {
             console.error('Error during account activation:', error);
@@ -217,7 +217,7 @@ export class UserController {
         const { password, newPassword, repeatNewPassword } = req.body;
 
         if (newPassword != repeatNewPassword) {
-            return res.json('New Password Does Not Match');
+            return res.status(400).json('New Password Does Not Match');
         }
 
         try {
