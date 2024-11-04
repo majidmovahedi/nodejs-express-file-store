@@ -1,5 +1,3 @@
-```markdown
-
 # File Store API
 
 This project is a robust API for file storage developed using Express and TypeScript, with PostgreSQL and Prisma for database management. It offers functionalities for managing products, users, and blog posts, as well as features for purchasing and downloading files. The API includes search capabilities for finding products and blog posts, with comprehensive documentation available via Swagger.
@@ -79,4 +77,3 @@ Ensure you have the following installed:
    ```bash
    docker exec -it file-store-api npx prisma migrate dev
    ```
-```
