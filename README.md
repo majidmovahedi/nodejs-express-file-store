@@ -77,3 +77,37 @@ Ensure you have the following installed:
    ```bash
    docker exec -it file-store-api npx prisma migrate dev
    ```
+
+## Usage
+
+API documentation is available at:
+
+[http://localhost:8000/api-docs](http://localhost:8000/api-docs)
+
+## Project Structure
+
+- `src/`: Source code of the project.
+  - `controllers/`: API controllers.
+  - `middlewares/`: Middleware functions.
+  - `models/`: Prisma models.
+  - `routes/`: API routes.
+  - `utils/`: Utility functions and helpers.
+- `prisma/`: Prisma configuration and migration files.
+
+## Contributing
+
+To contribute to the project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your changes.
+3. Submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Contact
+
+For questions or suggestions, please contact us:
+
+- Email: majidmovahedinasab@gmail.com
